@@ -1,4 +1,7 @@
 import pygame
+
+
+print("hello world")
 class Board:
     def __init__(self, width, height):
         self.width = width
