@@ -59,7 +59,8 @@ while running:
             if pygame.key.key_code("space") == pygame.K_SPACE:
                 print("hello")
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if in_board(event.pos[0], event.pos[1]):
+            if a.in_board(event.pos[0], event.pos[1]):
+                pass
 
 
     pygame.display.flip()
