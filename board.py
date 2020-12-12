@@ -6,20 +6,22 @@ import math
 con = sqlite3.connect("heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
 pygame.init()
+pygame.display.set_caption("Проект")
 
 class Board:
-    def __init__(self, width, height, num):
+    def __init__(self, width, height, num1, num2):
         self.height = height
         self.width = width
         self.size = width, height
-        self.num = num
+        self.num1 = num1
+        self.num2 = num2
         #список клеток с персонажами
         self.list_per = []
         self.list_move = []
-        for i in range(self.num):
+        for i in range(self.num1):
             b = []
             c = []
-            for j in range(self.num):
+            for j in range(self.num2):
                 b.append(0)
                 c.append(False)
             self.list_per.append(b)
@@ -40,8 +42,8 @@ class Board:
 
     # функция рисования поля
     def draw(self, color):
-        for i in range(self.num):
-            for j in range(self.num):
+        for i in range(self.num1):
+            for j in range(self.num2):
                 pygame.draw.rect(screen, pygame.Color(str(color)),
                                 (self.left + self.size_k * j, self.top + self.size_k * i,
                                  self.size_k, self.size_k), 1)
@@ -61,8 +63,8 @@ class Board:
     def draw_move_option(self):
         color = pygame.Color(50, 150, 50)
         if self.list_move != []:
-            for i in range(self.num ):
-                for j in range(self.num):
+            for i in range(self.num1):
+                for j in range(self.num2):
                     if self.list_move[i][j] is True and self.list_per[i][j] == 0:
                         pygame.draw.rect(screen2, color, (self.left + self.size_k * j + 1,
                         self.top + self.size_k * i + 1,
@@ -80,14 +82,14 @@ class Board:
         y = y // self.size_k
         self.list_move = []
         #обновление при каждом вызове, создание массива с координатами клеткок
-        for i in range(self.num):
+        for i in range(self.num1):
             b = []
-            for j in range(self.num):
+            for j in range(self.num2):
                 b.append([i, j])
             self.list_move.append(b)
         #перестройка массива с координат на True or False, где True = может дойти, а False = не может
-        for i in range(self.num):
-            for j in range(self.num):
+        for i in range(self.num1):
+            for j in range(self.num2):
                 self.list_move[i][j] = True
                 if x >= j:
                     if y >= i and result <= x - j + y - i:
@@ -102,8 +104,8 @@ class Board:
         return self.list_move
 
     def in_board(self, coord_x, coord_y):
-        if self.left <= coord_x <= self.left + self.size_k * self.num:
-            if self.top <= coord_y <= self.top + self.size_k * self.num:
+        if self.left <= coord_x <= self.left + self.size_k * self.num2:
+            if self.top <= coord_y <= self.top + self.size_k * self.num1:
                 return True
         return False
     
@@ -111,16 +113,19 @@ class Board:
         for i in self.list_per:
             print(i)
         print('')
+    
+    def input_list_per(self, *list):
+        self.list_per = list
             
 size = 800, 600
 screen = pygame.display.set_mode(size)
 screen2 = pygame.Surface(screen.get_size())
 screen.fill((0, 0, 0))
-a = Board(size[0], size[1], 8)
+a = Board(size[0], size[1], 8, 10)
 a.setting(10, 10, 70)
 clock = pygame.time.Clock()
 FPS = 60
-person = "Крестьянин"
+person = "Ангел"
 running = True
 draw = False
 while running:
