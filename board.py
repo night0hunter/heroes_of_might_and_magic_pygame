@@ -3,7 +3,7 @@ import sqlite3
 import math
 
 
-con = sqlite3.connect("units.db")
+con = sqlite3.connect("heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
 pygame.init()
 
@@ -49,8 +49,9 @@ class Board:
         return [x, y]
 
     def move_option(self, coord_x, coord_y, person):
-        result = cur.execute(f"""SELECT * FROM unit_stats""").fetchall()
-        result += 1
+        result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{person}'""").fetchone()
+        print(result)
+        result = int(result[0]) + 1
         x, y = coord_x, coord_y
         x -= self.left
         y -= self.top
