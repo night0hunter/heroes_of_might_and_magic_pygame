@@ -3,12 +3,12 @@ import pygame
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 1400, 800
+    size = width, height = 800, 600
     screen = pygame.display.set_mode(size)
     running = True
-    font = pygame.font.Font(None, 100)
-    text_x = 100
-    text_y = 400
+    font = pygame.font.Font(None, 60)
+    text_x = 30
+    text_y = 300
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
