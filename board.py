@@ -15,15 +15,22 @@ class Board:
         self.num = num
         #список клеток с персонажами
         self.list_per = []
-        for i in range(8):
+        self.list_move = []
+        for i in range(self.num):
             b = []
-            for j in range(8):
+            c = []
+            for j in range(self.num):
                 b.append(0)
+                c.append(False)
             self.list_per.append(b)
+            self.list_move.append(c)
         # значения по умолчанию
         self.size_k = 50
         self.top = 50
         self.left = 50
+        self.list_move = []
+        self.coord_x = 0
+        self.coord_y = 0
 
     # функция настройки
     def setting(self, left, top, size):
@@ -48,9 +55,23 @@ class Board:
         y = y // self.size_k
         return [x, y]
 
+    def get_click(self, coord_x, coord_y):
+        pass
+
+    def draw_move_option(self):
+        color = pygame.Color(50, 150, 50)
+        if self.list_move != []:
+            for i in range(self.num ):
+                for j in range(self.num):
+                    if self.list_move[i][j] is True and self.list_per[i][j] == 0:
+                        pygame.draw.rect(screen2, color, (self.left + self.size_k * j + 1,
+                        self.top + self.size_k * i + 1,
+                        self.size_k - 2, self.size_k - 2))
+
     def move_option(self, coord_x, coord_y, person):
+        self.coord_x = coord_x
+        self.coord_y = coord_y
         result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{person}'""").fetchone()
-        print(result)
         result = int(result[0]) + 1
         x, y = coord_x, coord_y
         x -= self.left
@@ -93,26 +114,32 @@ class Board:
             
 size = 800, 600
 screen = pygame.display.set_mode(size)
+screen2 = pygame.Surface(screen.get_size())
 screen.fill((0, 0, 0))
 a = Board(size[0], size[1], 8)
-a.setting(10, 10, 50)
-a.draw("white")
+a.setting(10, 10, 70)
+clock = pygame.time.Clock()
+FPS = 60
 person = "Крестьянин"
 running = True
+draw = False
 while running:
+    screen.blit(screen2, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
             a.p_list_per()
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if a.in_board(event.pos[0], event.pos[1]):
-                #get_click(event.pos[0], event.pos[1])
-                for i in a.move_option(event.pos[0], event.pos[1], person):
-                    print(i)
-                print(' ')
-
-
+                a.get_click(event.pos[0], event.pos[1])
+                a.move_option(event.pos[0], event.pos[1], person)
+                screen2.fill((0, 0, 0))
+                a.draw_move_option()
+    clock.tick(FPS)
+    screen.fill((0, 0, 0))
+    screen.blit(screen2, (0, 0))
+    a.draw("white")
     pygame.display.flip()
 
 pygame.quit()
