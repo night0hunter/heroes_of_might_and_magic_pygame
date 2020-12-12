@@ -9,6 +9,7 @@ pygame.init()
 pygame.display.set_caption("Проект")
 
 class Board:
+    # вводятся значения экрана и значения по умолчанию
     def __init__(self, width, height, num1, num2):
         self.height = height
         self.width = width
@@ -57,9 +58,11 @@ class Board:
         y = y // self.size_k
         return [x, y]
 
+    #функция не доделана
     def get_click(self, coord_x, coord_y):
         pass
 
+    # функция прорисовки возможности хода
     def draw_move_option(self):
         color = pygame.Color(50, 150, 50)
         if self.list_move != [] and self.list_per != []:
@@ -70,6 +73,7 @@ class Board:
                         self.top + self.size_k * i + 1,
                         self.size_k - 2, self.size_k - 2))
 
+    # функция генерирующая список возможностей хода
     def move_option(self, coord_x, coord_y, person):
         self.coord_x = coord_x
         self.coord_y = coord_y
@@ -103,23 +107,32 @@ class Board:
                         self.list_move[i][j] = False
         return self.list_move
 
+    # функция проверки на место нажатия
     def in_board(self, coord_x, coord_y):
         if self.left <= coord_x <= self.left + self.size_k * self.num2:
             if self.top <= coord_y <= self.top + self.size_k * self.num1:
                 return True
         return False
     
+    #функция вывода текущего местоположения персонажей
     def p_list_per(self):
         for i in self.list_per:
             print(i)
         print('')
     
+    #связующая функция изменения списка местоположения персонажей
     def input_list_per(self, list):
         self.list_per = list
 
 
-abc = [[1, 0, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1, 0, 1], [1, 1, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1],
-       [0, 1, 1, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 1, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0, 0, 1]]
+abc = [[1, 0, 0, 0, 0, 0, 1, 0],
+       [0, 0, 0, 0, 0, 1, 0, 1],
+       [1, 1, 0, 0, 1, 0, 0, 1],
+       [0, 0, 0, 0, 0, 0, 0, 1],
+       [0, 1, 1, 0, 0, 1, 0, 0],
+       [0, 0, 0, 1, 0, 1, 0, 0],
+       [0, 1, 0, 1, 0, 1, 0, 0],
+       [1, 0, 0, 0, 0, 0, 0, 1]]
 
 if __name__ == '__main__':       
     size = 800, 600
