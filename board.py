@@ -62,7 +62,7 @@ class Board:
 
     def draw_move_option(self):
         color = pygame.Color(50, 150, 50)
-        if self.list_move != []:
+        if self.list_move != [] and self.list_per != []:
             for i in range(self.num1):
                 for j in range(self.num2):
                     if self.list_move[i][j] is True and self.list_per[i][j] == 0:
@@ -114,38 +114,46 @@ class Board:
             print(i)
         print('')
     
-    def input_list_per(self, *list):
+    def input_list_per(self, list):
         self.list_per = list
-            
-size = 800, 600
-screen = pygame.display.set_mode(size)
-screen2 = pygame.Surface(screen.get_size())
-screen.fill((0, 0, 0))
-a = Board(size[0], size[1], 8, 10)
-a.setting(10, 10, 70)
-clock = pygame.time.Clock()
-FPS = 60
-person = "Ангел"
-running = True
-draw = False
-while running:
-    screen.blit(screen2, (0, 0))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            a.p_list_per()
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if a.in_board(event.pos[0], event.pos[1]):
-                a.get_click(event.pos[0], event.pos[1])
-                a.move_option(event.pos[0], event.pos[1], person)
-                screen2.fill((0, 0, 0))
-                a.draw_move_option()
-    clock.tick(FPS)
-    screen.fill((0, 0, 0))
-    screen.blit(screen2, (0, 0))
-    a.draw("white")
-    pygame.display.flip()
 
-pygame.quit()
-con.close()
+
+abc = [[1, 0, 0, 0, 0, 0, 1, 0], [0, 0, 0, 0, 0, 1, 0, 1], [1, 1, 0, 0, 1, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1],
+       [0, 1, 1, 0, 0, 1, 0, 0], [0, 0, 0, 1, 0, 1, 0, 0], [0, 1, 0, 1, 0, 1, 0, 0], [1, 0, 0, 0, 0, 0, 0, 1]]
+
+if __name__ == '__main__':       
+    size = 800, 600
+    screen = pygame.display.set_mode(size)
+    screen2 = pygame.Surface(screen.get_size())
+    screen.fill((0, 0, 0))
+    a = Board(size[0], size[1], 8, 8)
+    a.setting(10, 10, 70)
+    clock = pygame.time.Clock()
+    FPS = 60
+    person = "Костяной дракон"
+    running = True
+    draw = False
+    a.input_list_per(abc)
+    while running:
+        screen.blit(screen2, (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                a.p_list_per()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if a.in_board(event.pos[0], event.pos[1]):
+                    a.get_click(event.pos[0], event.pos[1])
+                    a.move_option(event.pos[0], event.pos[1], person)
+                    screen2.fill((0, 0, 0))
+                    a.draw_move_option()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                screen2.fill((0, 0, 0))
+        clock.tick(FPS)
+        screen.fill((0, 0, 0))
+        screen.blit(screen2, (0, 0))
+        a.draw("white")
+        pygame.display.flip()
+
+    pygame.quit()
+    con.close()
