@@ -9,6 +9,10 @@ if __name__ == '__main__':
     font = pygame.font.Font(None, 60)
     text_x = 30
     text_y = 300
+    clock = pygame.time.Clock()
+    FPS = 300
+    color = 255
+    flag = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -16,17 +20,20 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN:
                 if pygame.key.key_code("space") == pygame.K_SPACE:
                     running = False 
-            
-        for i in range(255, 50, -1):    
-            screen.fill((0, 0, 0))
-            text = font.render("Нажмите space, чтобы продолжить", True, (0, i, 0))
-            screen.blit(text, (text_x, text_y))
-            pygame.display.flip()
+        screen.fill((0, 0, 0))
+        text = font.render("Нажмите space, чтобы продолжить", True, (0, color, 0))
+        screen.blit(text, (text_x, text_y))
+        pygame.display.flip()
+        if flag:
+            color -= 1
 
-        for i in range(50, 256, 1):
-            screen.fill((0, 0, 0))
-            text = font.render("Нажмите space, чтобы продолжить", True, (0, i, 0))
-            screen.blit(text, (text_x, text_y))
-            pygame.display.flip()
+        elif not flag: 
+            color += 1          
+        
+        if color == 255:
+            flag = True
+        elif color == 50:
+            flag = False
+        clock.tick(FPS)
     # завершение работы:
     pygame.quit()
