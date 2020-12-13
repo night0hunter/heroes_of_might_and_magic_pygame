@@ -3,7 +3,7 @@ import sqlite3
 import math
 
 
-con = sqlite3.connect("heroes_of_might_and_magic_pygame\\units.db")
+con = sqlite3.connect("units.db")
 cur = con.cursor()
 pygame.init()
 pygame.display.set_caption("Проект")
@@ -85,7 +85,7 @@ class Board:
         x = x // self.size_k
         y = y // self.size_k
         self.list_move = []
-        #обновление при каждом вызове, создание массива с координатами клеткок
+        #обновление при каждом вызове, создание массива с координатами клеток
         for i in range(self.num1):
             b = []
             for j in range(self.num2):
