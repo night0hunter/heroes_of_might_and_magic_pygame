@@ -1,12 +1,20 @@
 import pygame
 import sqlite3
 import math
-
+import pygame
+import os
+from cursor import Cursor
 
 con = sqlite3.connect("units.db")
 cur = con.cursor()
 pygame.init()
 pygame.display.set_caption("Проект")
+image = load_image("arrow.png")
+image_boom = load_image("arrow.png")
+size = 800, 600
+screen = pygame.display.set_mode(size)
+pygame.mouse.set_visible(False)
+MANUAL_CURSOR = pygame.image.load('arrow.png').convert_alpha()
 
 class Board:
     # вводятся значения экрана и значения по умолчанию
@@ -134,9 +142,7 @@ abc = [[1, 0, 0, 0, 0, 0, 1, 0],
        [0, 1, 0, 1, 0, 1, 0, 0],
        [1, 0, 0, 0, 0, 0, 0, 1]]
 
-if __name__ == '__main__':       
-    size = 800, 600
-    screen = pygame.display.set_mode(size)
+if __name__ == '__main__':      
     screen2 = pygame.Surface(screen.get_size())
     screen.fill((0, 0, 0))
     a = Board(size[0], size[1], 8, 8)
@@ -162,6 +168,8 @@ if __name__ == '__main__':
                     a.draw_move_option()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 screen2.fill((0, 0, 0))
+            if event.type == pygame.MOUSEMOTION:
+                
         clock.tick(FPS)
         screen.fill((0, 0, 0))
         screen.blit(screen2, (0, 0))
