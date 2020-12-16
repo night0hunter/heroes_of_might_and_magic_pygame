@@ -32,18 +32,24 @@ sprite.rect = sprite.image.get_rect()
 
 
 clock = pygame.time.Clock()
-fps = 144
+fps = 1440
 running = True
 pygame.mouse.set_visible(False)
+draw = True
 while running:
     screen.fill(pygame.Color("black"))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEMOTION:
-            sprite.rect.x = event.pos[0] - 10
-            sprite.rect.y = event.pos[1] - 10
-    all_sprites.draw(screen)
+            sprite.rect.x = event.pos[0]
+            sprite.rect.y = event.pos[1]
+            if 0 < event.pos[0] < width and 0 < event.pos[1] < height:
+                draw = True
+            else:
+                draw = False
+    if draw:
+        all_sprites.draw(screen)
     pygame.display.flip()
     clock.tick(fps)
 
