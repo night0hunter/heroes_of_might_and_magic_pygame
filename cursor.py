@@ -34,8 +34,6 @@ sprite.rect = sprite.image.get_rect()
 clock = pygame.time.Clock()
 fps = 144
 running = True
-sprite.rect.x = 5
-sprite.rect.y = 20
 pygame.mouse.set_visible(False)
 while running:
     screen.fill(pygame.Color("black"))
