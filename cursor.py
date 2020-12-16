@@ -44,7 +44,7 @@ while running:
         if event.type == pygame.MOUSEMOTION:
             sprite.rect.x = event.pos[0]
             sprite.rect.y = event.pos[1]
-            if 0 < event.pos[0] < width and 0 < event.pos[1] < height:
+            if pygame.mouse.get_focused():
                 draw = True
             else:
                 draw = False
