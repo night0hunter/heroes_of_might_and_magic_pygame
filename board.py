@@ -32,8 +32,6 @@ class Board:
         self.top = 50
         self.left = 50
         self.list_move = []
-        self.coord_x = 0
-        self.coord_y = 0
 
     # функция настройки
     def setting(self, left, top, size):
@@ -71,8 +69,6 @@ class Board:
 
     # функция генерирующая список возможностей хода
     def move_option(self, coord_x, coord_y, person):
-        self.coord_x = coord_x
-        self.coord_y = coord_y
         result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{person}'""").fetchone()
         result = int(result[0]) + 1
         x, y = coord_x, coord_y
@@ -129,6 +125,23 @@ class Board:
         if self.list_per[y][x] == 1:
             return True
         return False
+    
+    def in_list_move(self, pos_x, pos_y):
+        x, y = pos_x, pos_y
+        x -= self.left
+        y -= self.top
+        x = x // self.size_k
+        y = y // self.size_k
+        return self.list_move[y][x]
+    
+    def make_move(self, arr, pos_x, pos_y):
+        self.list_per[arr[1]][arr[0]] = 0
+        x, y = pos_x, pos_y
+        x -= self.left
+        y -= self.top
+        x = x // self.size_k
+        y = y // self.size_k
+        self.list_per[y][x] = 1
 
 
 abc = [[1, 0, 0, 0, 0, 0, 0, 1],
@@ -149,7 +162,7 @@ if __name__ == '__main__':
     a.setting(10, 10, 70)
     clock = pygame.time.Clock()
     FPS = 60
-    person = "Костяной дракон"
+    person = "Крестьянин"
     running = True
     Move = False
     a.input_list_per(abc)
@@ -163,17 +176,20 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 screen2.fill((0, 0, 0))
                 if a.in_board(event.pos[0], event.pos[1]):
-                    if hod and a.in_list_move(event.pos[0], event.pos[0]):
-                        a.make_hod
-                        hod = False
                     if a.in_list_per(event.pos[0], event.pos[1]):
                         a.move_option(event.pos[0], event.pos[1], person)
                         a.draw_move_option()
                         Move = True
+                        arr = a.get_coords(event.pos[0], event.pos[1])
+                    elif Move and a.in_list_move(event.pos[0], event.pos[0]):
+                        a.make_move(arr, event.pos[0], event.pos[1])
+                        Move = False
+                
 
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 screen2.fill((0, 0, 0))
+                Move = False
         clock.tick(FPS)
         screen.fill((0, 0, 0))
         screen.blit(screen2, (0, 0))
