@@ -58,10 +58,6 @@ class Board:
         y = y // self.size_k
         return [x, y]
 
-    #функция не доделана
-    def get_click(self, coord_x, coord_y):
-        pass
-
     # функция прорисовки возможности хода
     def draw_move_option(self):
         color = pygame.Color(50, 150, 50)
@@ -123,15 +119,25 @@ class Board:
     #связующая функция изменения списка местоположения персонажей
     def input_list_per(self, list):
         self.list_per = list
+    
+    def in_list_per(self, pos_x, pos_y):
+        x, y = pos_x, pos_y
+        x -= self.left
+        y -= self.top
+        x = x // self.size_k
+        y = y // self.size_k
+        if self.list_per[y][x] == 1:
+            return True
+        return False
 
 
-abc = [[1, 0, 0, 0, 0, 0, 1, 0],
-       [0, 0, 0, 0, 0, 1, 0, 1],
-       [1, 1, 0, 0, 1, 0, 0, 1],
-       [0, 0, 0, 0, 0, 0, 0, 1],
-       [0, 1, 1, 0, 0, 1, 0, 0],
-       [0, 0, 0, 1, 0, 1, 0, 0],
-       [0, 1, 0, 1, 0, 1, 0, 0],
+abc = [[1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
+       [1, 0, 0, 0, 0, 0, 0, 1],
        [1, 0, 0, 0, 0, 0, 0, 1]]
 
 if __name__ == '__main__': 
@@ -145,6 +151,7 @@ if __name__ == '__main__':
     FPS = 60
     person = "Костяной дракон"
     running = True
+    Move = False
     a.input_list_per(abc)
     while running:
         screen.blit(screen2, (0, 0))
@@ -154,11 +161,17 @@ if __name__ == '__main__':
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 a.p_list_per()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                screen2.fill((0, 0, 0))
                 if a.in_board(event.pos[0], event.pos[1]):
-                    a.get_click(event.pos[0], event.pos[1])
-                    a.move_option(event.pos[0], event.pos[1], person)
-                    screen2.fill((0, 0, 0))
-                    a.draw_move_option()
+                    if hod and a.in_list_move(event.pos[0], event.pos[0]):
+                        a.make_hod
+                        hod = False
+                    if a.in_list_per(event.pos[0], event.pos[1]):
+                        a.move_option(event.pos[0], event.pos[1], person)
+                        a.draw_move_option()
+                        Move = True
+
+
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 screen2.fill((0, 0, 0))
         clock.tick(FPS)

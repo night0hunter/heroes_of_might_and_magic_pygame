@@ -35,7 +35,7 @@ clock = pygame.time.Clock()
 fps = 1440
 running = True
 pygame.mouse.set_visible(False)
-draw = True
+draw = False
 while running:
     screen.fill(pygame.Color("black"))
     for event in pygame.event.get():
@@ -54,4 +54,3 @@ while running:
     clock.tick(fps)
 
 pygame.quit()
-
