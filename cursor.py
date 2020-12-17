@@ -32,7 +32,7 @@ sprite.rect = sprite.image.get_rect()
 
 
 clock = pygame.time.Clock()
-fps = 144
+fps = 1440
 running = True
 pygame.mouse.set_visible(False)
 while running:

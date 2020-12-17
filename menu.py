@@ -15,14 +15,10 @@ class Menu:
         screen.fill((0, 0, 0))
         text = font.render("Нажмите space, чтобы продолжить", True, (0, self.color, 0))
         screen.blit(text, (self.text_x, self.text_y))
-        
-        pygame.draw.rect(screen, (0, self.color, 0), (0, 0,
-                                           800, 600), 10)
+        pygame.draw.rect(screen, (0, self.color, 0), (0, 0, 800, 600), 10)
         pygame.display.flip()
-        
         if self.flag:
             self.color -= 1
-
         elif not self.flag: 
             self.color += 1          
         
