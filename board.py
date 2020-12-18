@@ -135,13 +135,16 @@ class Board:
         return self.list_move[y][x]
     
     def make_move(self, arr, pos_x, pos_y):
-        self.list_per[arr[1]][arr[0]] = 0
+        a = self.list_per[arr[1]][arr[0]]
+        print(arr[0], arr[1])
         x, y = pos_x, pos_y
         x -= self.left
         y -= self.top
         x = x // self.size_k
         y = y // self.size_k
-        self.list_per[y][x] = 1
+        print(y, x)
+        self.list_per[arr[1]][arr[0]] = 0
+        self.list_per[y][x] = a
 
 
 abc = [[1, 0, 0, 0, 0, 0, 0, 1],
@@ -162,7 +165,7 @@ if __name__ == '__main__':
     a.setting(10, 10, 70)
     clock = pygame.time.Clock()
     FPS = 60
-    person = "Крестьянин"
+    person = "Костяной дракон"
     running = True
     Move = False
     a.input_list_per(abc)
@@ -176,17 +179,20 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 screen2.fill((0, 0, 0))
                 if a.in_board(event.pos[0], event.pos[1]):
-                    if a.in_list_per(event.pos[0], event.pos[1]):
+                    if not Move and a.in_list_per(event.pos[0], event.pos[1]):
                         a.move_option(event.pos[0], event.pos[1], person)
                         a.draw_move_option()
                         Move = True
                         arr = a.get_coords(event.pos[0], event.pos[1])
-                    elif Move and a.in_list_move(event.pos[0], event.pos[0]):
-                        a.make_move(arr, event.pos[0], event.pos[1])
+                    elif Move and a.in_list_move(event.pos[0], event.pos[1]):
+                        if arr != a.get_coords(event.pos[0], event.pos[1]):
+                            if not a.in_list_per(event.pos[0], event.pos[1]):
+                                a.make_move(arr, event.pos[0], event.pos[1])
                         Move = False
-                
-
-
+                    else:
+                        Move = False
+                else:
+                    Move = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 screen2.fill((0, 0, 0))
                 Move = False
