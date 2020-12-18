@@ -2,11 +2,9 @@ import pygame
 import sqlite3
 import os
 import sys
-import cursor
 
 
-
-con = sqlite3.connect("units.db")
+con = sqlite3.connect("C:\Github\heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
 pygame.init()
 pygame.display.set_caption("Система боя от Героев Меча и Магии")
@@ -189,17 +187,7 @@ Move = False
 pygame.mouse.set_visible(False)
 draw = False
 a.input_list_per(abc)
-
-all_sprites = pygame.sprite.Group()
-sprite = pygame.sprite.Sprite(all_sprites)
-sprite.image = cursor.load_image("arrow.png")
-sprite.rect = sprite.image.get_rect()
-clock = pygame.time.Clock()
-fps = 1440
-pygame.mouse.set_visible(False)
-draw = False
 while running:
-    screen.blit(screen2, (0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -220,6 +208,8 @@ while running:
                     Move = False
                 else:
                     Move = False
+            else:
+                Move = False
         if event.type == pygame.MOUSEMOTION:
             sprite.rect.x = event.pos[0]
             sprite.rect.y = event.pos[1]
@@ -227,46 +217,16 @@ while running:
                 draw = True
             else:
                 draw = False
-    if draw:
-        all_sprites.draw(screen)
-    pygame.display.flip()
-    clock.tick(fps)
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-        a.p_list_per()
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        screen2.fill((0, 0, 0))
-        if a.in_board(event.pos[0], event.pos[1]):
-            if not Move and a.in_list_per(event.pos[0], event.pos[1]):
-                a.move_option(event.pos[0], event.pos[1], person)
-                a.draw_move_option()
-                Move = True
-                arr = a.get_coords(event.pos[0], event.pos[1])
-            elif Move and a.in_list_move(event.pos[0], event.pos[1]):
-                if arr != a.get_coords(event.pos[0], event.pos[1]):
-                    if not a.in_list_per(event.pos[0], event.pos[1]):
-                        a.make_move(arr, event.pos[0], event.pos[1])
-                Move = False
-            else:
-                Move = False
-        else:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+            screen2.fill((0, 0, 0))
             Move = False
-        if event.type == pygame.MOUSEMOTION:
-            sprite.rect.x = event.pos[0]
-            sprite.rect.y = event.pos[1]
-            if pygame.mouse.get_focused():
-                draw = True
-            else:
-                draw = False
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-        screen2.fill((0, 0, 0))
-        Move = False
-    clock.tick(FPS)
-    screen.fill((0, 0, 0))
-    screen.blit(screen2, (0, 0))
-    a.draw("white")
-    if draw:
-        all_sprites.draw(screen)
-    pygame.display.flip()
+        clock.tick(FPS)
+        screen.fill((0, 0, 0))
+        screen.blit(screen2, (0, 0))
+        a.draw("white")
+        if draw:
+            all_sprites.draw(screen)
+        pygame.display.flip()
 
 pygame.quit()
 con.close()
