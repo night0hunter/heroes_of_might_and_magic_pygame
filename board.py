@@ -1,12 +1,12 @@
 import pygame
 import sqlite3
-import math
+import os
+import sys
 
 con = sqlite3.connect("heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
 pygame.init()
-pygame.display.set_caption("Проект")
-
+pygame.display.set_caption("Система боя от Героев Меча и Магии")
 
 class Board:
     # вводятся значения экрана и значения по умолчанию
@@ -105,13 +105,7 @@ class Board:
             if self.top <= coord_y <= self.top + self.size_k * self.num1:
                 return True
         return False
-    
-    #функция вывода текущего местоположения персонажей
-    def p_list_per(self):
-        for i in self.list_per:
-            print(i)
-        print('')
-    
+      
     #связующая функция изменения списка местоположения персонажей
     def input_list_per(self, list):
         self.list_per = list
@@ -163,11 +157,34 @@ screen2 = pygame.Surface(screen.get_size())
 screen.fill((0, 0, 0))
 a = Board(size[0], size[1], 8, 8)
 a.setting(10, 10, 70)
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('data', name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
+    return image
+
+all_sprites = pygame.sprite.Group()
+sprite = pygame.sprite.Sprite(all_sprites)
+sprite.image = load_image("arrow.png")
+sprite.rect = sprite.image.get_rect()
+
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 144
 person = "Костяной дракон"
 running = True
 Move = False
+pygame.mouse.set_visible(False)
+draw = False
 a.input_list_per(abc)
 while running:
     screen.blit(screen2, (0, 0))
@@ -175,7 +192,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            a.p_list_per()
+            pygame.mouse.set_visible(True)
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             screen2.fill((0, 0, 0))
             if a.in_board(event.pos[0], event.pos[1]):
@@ -196,10 +213,19 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             screen2.fill((0, 0, 0))
             Move = False
+        if event.type == pygame.MOUSEMOTION:
+            sprite.rect.x = event.pos[0]
+            sprite.rect.y = event.pos[1]
+            if pygame.mouse.get_focused():
+                draw = True
+            else:
+                draw = False
     clock.tick(FPS)
     screen.fill((0, 0, 0))
     screen.blit(screen2, (0, 0))
     a.draw("white")
+    if draw:
+        all_sprites.draw(screen)
     pygame.display.flip()
 
 pygame.quit()

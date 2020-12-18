@@ -1,7 +1,7 @@
 import os
 import sys
 import pygame
-import random
+
 
 # Изображение не получится загрузить
 # без предварительной инициализации pygame
