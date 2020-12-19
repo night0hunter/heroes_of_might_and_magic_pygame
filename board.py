@@ -117,7 +117,7 @@ class Board:
         y -= self.top
         x = x // self.size_k
         y = y // self.size_k
-        if self.list_per[y][x] == 1:
+        if self.list_per[y][x] != 0:
             return True
         return False
     
