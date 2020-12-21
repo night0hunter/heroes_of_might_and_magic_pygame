@@ -69,14 +69,14 @@ class Board:
                         self.size_k - 2, self.size_k - 2))
 
     # функция генерирующая список возможностей хода
-    def move_option(self, coord_x, coord_y, person):
-        result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{person}'""").fetchone()
-        result = int(result[0]) + 1
+    def move_option(self, coord_x, coord_y):
         x, y = coord_x, coord_y
         x -= self.left
         y -= self.top
         x = x // self.size_k
         y = y // self.size_k
+        result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{self.list_per[y][x]}'""").fetchone()
+        result = int(result[0]) + 1
         self.list_move = []
         #обновление при каждом вызове, создание массива с координатами клеток
         for i in range(self.num1):
@@ -111,6 +111,7 @@ class Board:
     def input_list_per(self, list):
         self.list_per = list
     
+    #функция проверки если на клетке никого нет вернет False если кто-то есть вернет True 
     def in_list_per(self, pos_x, pos_y):
         x, y = pos_x, pos_y
         x -= self.left
@@ -121,6 +122,7 @@ class Board:
             return True
         return False
     
+    #функция проверки если на клетке никого нет вернет False если кто-то есть вернет True 
     def in_list_move(self, pos_x, pos_y):
         x, y = pos_x, pos_y
         x -= self.left
@@ -129,6 +131,7 @@ class Board:
         y = y // self.size_k
         return self.list_move[y][x]
     
+    #функция хода  
     def make_move(self, arr, pos_x, pos_y):
         a = self.list_per[arr[1]][arr[0]]
         print(arr[0], arr[1])
@@ -137,19 +140,18 @@ class Board:
         y -= self.top
         x = x // self.size_k
         y = y // self.size_k
-        print(y, x)
         self.list_per[arr[1]][arr[0]] = 0
         self.list_per[y][x] = a
 
 
-abc = [[1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1],
-       [1, 0, 0, 0, 0, 0, 0, 1]]
+abc = [["Рыцарь", 0, 0, 0, 0, 0, 0, "Костяной дракон"],
+       [0, 0, 0, 0, 0, 0, 0, "Крестьянин"],
+       [0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0]]
 
  
 size = 800, 600
@@ -181,7 +183,6 @@ sprite.rect = sprite.image.get_rect()
 
 clock = pygame.time.Clock()
 FPS = 144
-person = "Костяной дракон"
 running = True
 Move = False
 pygame.mouse.set_visible(False)
@@ -197,7 +198,7 @@ while running:
             screen2.fill((0, 0, 0))
             if a.in_board(event.pos[0], event.pos[1]):
                 if not Move and a.in_list_per(event.pos[0], event.pos[1]):
-                    a.move_option(event.pos[0], event.pos[1], person)
+                    a.move_option(event.pos[0], event.pos[1])
                     a.draw_move_option()
                     Move = True
                     arr = a.get_coords(event.pos[0], event.pos[1])
