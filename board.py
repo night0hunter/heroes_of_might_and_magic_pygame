@@ -134,7 +134,6 @@ class Board:
     #функция хода  
     def make_move(self, arr, pos_x, pos_y):
         a = self.list_per[arr[1]][arr[0]]
-        print(arr[0], arr[1])
         x, y = pos_x, pos_y
         x -= self.left
         y -= self.top
@@ -142,13 +141,25 @@ class Board:
         y = y // self.size_k
         self.list_per[arr[1]][arr[0]] = 0
         self.list_per[y][x] = a
+    
+    def draw_person(self):
+        all_sprites2 = pygame.sprite.Group()
+        for y in range(self.num1):
+            for x in range(self.num2):
+                if self.list_per[x][y] != 0:
+                    sprite = pygame.sprite.Sprite(all_sprites2)
+                    sprite.image = load_image(f"{self.list_per[x][y]}.png", colorkey=-1)
+                    sprite.rect = sprite.image.get_rect()
+                    sprite.rect.x = self.left + self.size_k * y + 1
+                    sprite.rect.y = self.top + self.size_k * x + 1
+        all_sprites2.draw(screen)
 
 
 abc = [["Рыцарь", 0, 0, 0, 0, 0, 0, "Костяной дракон"],
        [0, 0, 0, 0, 0, 0, 0, "Крестьянин"],
        [0, 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0],
+       ["Ангел", 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0]]
@@ -162,7 +173,7 @@ a = Board(size[0], size[1], 8, 8)
 a.setting(10, 10, 70)
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join("heroes_of_might_and_magic_pygame",'data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
@@ -225,6 +236,7 @@ while running:
         screen.fill((0, 0, 0))
         screen.blit(screen2, (0, 0))
         a.draw("white")
+        a.draw_person()
         if draw:
             all_sprites.draw(screen)
         pygame.display.flip()
