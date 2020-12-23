@@ -152,7 +152,7 @@ class Board:
                     sprite.rect = sprite.image.get_rect()
                     sprite.rect.x = self.left + self.size_k * y + 1
                     sprite.rect.y = self.top + self.size_k * x + 1
-        all_sprites2.draw(screen)
+        all_sprites2.draw(screen2)
 
 
 abc = [["Рыцарь", 0, 0, 0, 0, 0, 0, "Костяной дракон"],
@@ -234,9 +234,9 @@ while running:
             Move = False
         clock.tick(FPS)
         screen.fill((0, 0, 0))
+        a.draw_person()
         screen.blit(screen2, (0, 0))
         a.draw("white")
-        a.draw_person()
         if draw:
             all_sprites.draw(screen)
         pygame.display.flip()
