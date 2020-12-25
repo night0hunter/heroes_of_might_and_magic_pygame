@@ -146,33 +146,33 @@ class Board:
         all_sprites2 = pygame.sprite.Group()
         for y in range(self.num1):
             for x in range(self.num2):
-                if self.list_per[x][y] != 0:
+                if self.list_per[y][x] != 0:
                     sprite = pygame.sprite.Sprite(all_sprites2)
-                    if self.list_per[x][y] == "Костяной дракон":
-                        sprite.image = load_image(f"{self.list_per[x][y]}.png")
+                    if self.list_per[y][x] == "Костяной дракон":
+                        sprite.image = load_image(f"{self.list_per[y][x]}.png")
                     else:    
-                        sprite.image = load_image(f"{self.list_per[x][y]}.png", colorkey=-1)
+                        sprite.image = load_image(f"{self.list_per[y][x]}.png", colorkey=-1)
                     sprite.rect = sprite.image.get_rect()
-                    sprite.rect.x = self.left + self.size_k * y + 1
-                    sprite.rect.y = self.top + self.size_k * x + 1
+                    sprite.rect.x = self.left + self.size_k * x + 1
+                    sprite.rect.y = self.top + self.size_k * y + 1
         all_sprites2.draw(screen2)
 
 
-abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон"],
-       ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби"],
-       ["Некромант", "Приведение", 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0],
-       ["Ангел", 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0]]
+abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
+       ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби", 0, 0],
+       ["Некромант", "Привидение", 0, 0, 0, 0, 0, 0, 0, 0],
+       ["Крестьянин", 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       ["Ангел", 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
  
 size = 800, 600
 screen = pygame.display.set_mode(size)    
 screen2 = pygame.Surface(screen.get_size())
 screen.fill((0, 0, 0))
-a = Board(size[0], size[1], 8, 8)
+a = Board(size[0], size[1], 8, 10)
 a.setting(10, 10, 70)
 
 def load_image(name, colorkey=None):
