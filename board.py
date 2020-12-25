@@ -148,16 +148,19 @@ class Board:
             for x in range(self.num2):
                 if self.list_per[x][y] != 0:
                     sprite = pygame.sprite.Sprite(all_sprites2)
-                    sprite.image = load_image(f"{self.list_per[x][y]}.png", colorkey=-1)
+                    if self.list_per[x][y] == "Костяной дракон":
+                        sprite.image = load_image(f"{self.list_per[x][y]}.png")
+                    else:    
+                        sprite.image = load_image(f"{self.list_per[x][y]}.png", colorkey=-1)
                     sprite.rect = sprite.image.get_rect()
                     sprite.rect.x = self.left + self.size_k * y + 1
                     sprite.rect.y = self.top + self.size_k * x + 1
         all_sprites2.draw(screen2)
 
 
-abc = [["Рыцарь", 0, 0, 0, 0, 0, 0, "Костяной дракон"],
-       [0, 0, 0, 0, 0, 0, 0, "Крестьянин"],
-       [0, 0, 0, 0, 0, 0, 0, 0],
+abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон"],
+       ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби"],
+       ["Некромант", "Приведение", 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0],
        ["Ангел", 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0],
@@ -201,10 +204,10 @@ draw = False
 a.input_list_per(abc)
 while running:
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:   
             running = False
         if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            pygame.mouse.set_visible(True)
+            pass
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             screen2.fill((0, 0, 0))
             if a.in_board(event.pos[0], event.pos[1]):
@@ -233,7 +236,6 @@ while running:
             screen2.fill((0, 0, 0))
             Move = False
         clock.tick(FPS)
-        screen.fill((0, 0, 0))
         a.draw_person()
         screen.blit(screen2, (0, 0))
         a.draw("white")
