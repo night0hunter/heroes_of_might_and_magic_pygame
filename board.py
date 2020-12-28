@@ -168,7 +168,7 @@ abc = [["Рыцарь", "Наемник с копьем", "Наемник с щ�
        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
  
-size = 800, 600
+size = 1000, 700
 screen = pygame.display.set_mode(size)    
 screen2 = pygame.Surface(screen.get_size())
 screen.fill((0, 0, 0))
@@ -196,7 +196,7 @@ sprite.image = load_image("arrow.png")
 sprite.rect = sprite.image.get_rect()
 
 clock = pygame.time.Clock()
-FPS = 144
+FPS = 1440
 running = True
 Move = False
 pygame.mouse.set_visible(False)
