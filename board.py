@@ -148,7 +148,7 @@ class Board:
             for x in range(self.num2):
                 if self.list_per[y][x] != 0:
                     sprite = pygame.sprite.Sprite(all_sprites2)
-                    if self.list_per[y][x] == "Костяной дракон":
+                    if self.list_per[y][x] == "Костяной дракон" or self.list_per[y][x] == "Паладин":
                         sprite.image = load_image(f"{self.list_per[y][x]}.png")
                     else:    
                         sprite.image = load_image(f"{self.list_per[y][x]}.png", colorkey=-1)
@@ -159,21 +159,23 @@ class Board:
     
     def draw_sprite(self):
         result = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 1""").fetchall()
-        print(result)
-        all_sprites2 = pygame.sprite.Group()
+        all_sprites3 = pygame.sprite.Group()
         for i in result:
-            sprite = pygame.sprite.Sprite(all_sprites2)
-            sprite.image = load_image(f"{i[0]}.png")
+            sprite = pygame.sprite.Sprite(all_sprites3)
+            if i[0] == "Костяной дракон" or i[0] == "Паладин":
+                sprite.image = load_image(f"{i[0]}.png")
+            else:
+                sprite.image = load_image(f"{i[0]}.png", colorkey=-1)
             sprite.rect = sprite.image.get_rect()
             sprite.rect.x = self.left + 1
             sprite.rect.y = self.top + 1
-        all_sprites2.draw()
+        all_sprites3.draw(screen)
 
 
 abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
        ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби", 0, 0],
        ["Некромант", "Привидение", 0, 0, 0, 0, 0, 0, 0, 0],
-       ["Крестьянин", 0, 0, 0, 0, 0, 0, 0, 0, 0],
+       ["Крестьянин", "Паладин", 0, 0, 0, 0, 0, 0, 0, 0],
        ["Ангел", 0, 0, 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -181,7 +183,7 @@ abc = [["Рыцарь", "Наемник с копьем", "Наемник с щ�
 
  
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join("heroes_of_might_and_magic_pygame", 'data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
