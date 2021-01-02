@@ -159,17 +159,30 @@ class Board:
     
     def draw_sprite(self):
         result = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 1""").fetchall()
+        result2 = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 0""").fetchall()
         all_sprites3 = pygame.sprite.Group()
-        for i in result:
+        all_sprites4 = pygame.sprite.Group()
+        for i in range(len(result)):
             sprite = pygame.sprite.Sprite(all_sprites3)
-            if i[0] == "Костяной дракон" or i[0] == "Паладин":
-                sprite.image = load_image(f"{i[0]}.png")
+            if result[i][0] == "Костяной дракон" or result[i][0] == "Паладин":
+                sprite.image = load_image(f"{result[i][0]}.png")
             else:
-                sprite.image = load_image(f"{i[0]}.png", colorkey=-1)
+                sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
             sprite.rect = sprite.image.get_rect()
             sprite.rect.x = self.left + 1
-            sprite.rect.y = self.top + 1
+            sprite.rect.y = self.top * (i + 1)
         all_sprites3.draw(screen)
+
+        for i in range(len(result2)):
+            sprite1 = pygame.sprite.Sprite(all_sprites4)
+            if result2[i][0] == "Костяной дракон" or result2[i][0] == "Паладин":
+                sprite1.image = load_image(f"{result2[i][0]}.png")
+            else:
+                sprite1.image = load_image(f"{result2[i][0]}.png", colorkey=-1)
+            sprite1.rect = sprite1.image.get_rect()
+            sprite1.rect.x = 900 - self.left
+            sprite1.rect.y = self.top * (i + 1)
+        all_sprites4.draw(screen)
 
 
 abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
@@ -183,7 +196,7 @@ abc = [["Рыцарь", "Наемник с копьем", "Наемник с щ�
 
  
 def load_image(name, colorkey=None):
-    fullname = os.path.join("heroes_of_might_and_magic_pygame", 'data', name)
+    fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
