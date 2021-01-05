@@ -5,8 +5,10 @@ from board import Board, load_image
 import sqlite3
 
 
+
 if __name__ == "__main__":
-    size = 1000, 700
+    font = pygame.font.Font(None, 24)
+    size = 1400, 700
     screen = pygame.display.set_mode(size)    
     screen2 = pygame.Surface(screen.get_size())
     screen.fill((0, 0, 0))
@@ -19,6 +21,7 @@ if __name__ == "__main__":
                 running = False
         a.draw_sprite()
         a.drawForChoice("white")
+       
         pygame.display.flip()
     pygame.quit()
 

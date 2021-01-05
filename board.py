@@ -53,7 +53,7 @@ class Board:
         for i in range(self.num1):
             for j in range(self.num2):
                 pygame.draw.rect(screen, pygame.Color(str(color)),
-                                (self.left + 110 + self.size_k1 * j, self.top + self.size_k1 * i,
+                                (self.left + 300 + self.size_k1 * j, self.top + self.size_k1 * i,
                                  self.size_k1, self.size_k1), 1)
 
     # функия получения координат клетки по типу [x, y] пример (0, 3)
@@ -149,6 +149,9 @@ class Board:
         y = y // self.size_k
         self.list_per[arr[1]][arr[0]] = 0
         self.list_per[y][x] = a
+
+    def write_name(self):
+        pass
     
     def draw_person(self):
         all_sprites2 = pygame.sprite.Group()
@@ -170,15 +173,23 @@ class Board:
         result2 = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 0""").fetchall()
         all_sprites3 = pygame.sprite.Group()
         all_sprites4 = pygame.sprite.Group()
+        color = pygame.Color("white")
+        font = pygame.font.Font(None, 18)
+
         for i in range(len(result)):
             sprite = pygame.sprite.Sprite(all_sprites3)
             if result[i][0] == "Костяной дракон" or result[i][0] == "Паладин":
                 sprite.image = load_image(f"{result[i][0]}.png")
             else:
                 sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
+
+            text = font.render(result[i][0], True, color)
+            place = text.get_rect(center=(self.left + 125, self.top * (i + 1)))
+            screen.blit(text, place)
+
             sprite.rect = sprite.image.get_rect()
             sprite.rect.x = self.left + 1
-            sprite.rect.y = self.top * (i + 1)
+            sprite.rect.y = self.top * i
         all_sprites3.draw(screen)
 
         for i in range(len(result2)):
@@ -188,10 +199,15 @@ class Board:
             else:
                 sprite1.image = load_image(f"{result2[i][0]}.png", colorkey=-1)
             sprite1.rect = sprite1.image.get_rect()
-            sprite1.rect.x = 900 - self.left
-            sprite1.rect.y = self.top * (i + 1)
-        all_sprites4.draw(screen)
+            sprite1.rect.x = 1300 - self.left
+            sprite1.rect.y = self.top * i
 
+            text = font.render(result2[i][0], True, color)
+            place = text.get_rect(center=(1200 - self.left, self.top * (i + 1)))
+            screen.blit(text, place)
+        all_sprites4.draw(screen)
+        
+        
 
 abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
        ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби", 0, 0],
