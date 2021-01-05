@@ -174,7 +174,7 @@ class Board:
         all_sprites3 = pygame.sprite.Group()
         all_sprites4 = pygame.sprite.Group()
         color = pygame.Color("white")
-        font = pygame.font.Font(None, 18)
+        font = pygame.font.Font(None, 24)
 
         for i in range(len(result)):
             sprite = pygame.sprite.Sprite(all_sprites3)
@@ -184,12 +184,12 @@ class Board:
                 sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
 
             text = font.render(result[i][0], True, color)
-            place = text.get_rect(center=(self.left + 125, self.top * (i + 1)))
+            place = text.get_rect(center=(self.left + 150, self.top * (i + 2)))
             screen.blit(text, place)
 
             sprite.rect = sprite.image.get_rect()
             sprite.rect.x = self.left + 1
-            sprite.rect.y = self.top * i
+            sprite.rect.y = self.top * (i + 1)
         all_sprites3.draw(screen)
 
         for i in range(len(result2)):
@@ -200,10 +200,10 @@ class Board:
                 sprite1.image = load_image(f"{result2[i][0]}.png", colorkey=-1)
             sprite1.rect = sprite1.image.get_rect()
             sprite1.rect.x = 1300 - self.left
-            sprite1.rect.y = self.top * i
+            sprite1.rect.y = self.top * (i + 1)
 
             text = font.render(result2[i][0], True, color)
-            place = text.get_rect(center=(1200 - self.left, self.top * (i + 1)))
+            place = text.get_rect(center=(1200 - self.left, self.top * (i + 2)))
             screen.blit(text, place)
         all_sprites4.draw(screen)
         
