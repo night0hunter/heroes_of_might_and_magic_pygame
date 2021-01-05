@@ -30,6 +30,7 @@ class Board:
             self.list_move.append(c)
         # значения по умолчанию
         self.size_k = 50
+        self.size_k1 = 65
         self.top = 50
         self.left = 50
         self.list_move = []
@@ -47,6 +48,13 @@ class Board:
                 pygame.draw.rect(screen, pygame.Color(str(color)),
                                 (self.left + self.size_k * j, self.top + self.size_k * i,
                                  self.size_k, self.size_k), 1)
+
+    def drawForChoice(self, color):
+        for i in range(self.num1):
+            for j in range(self.num2):
+                pygame.draw.rect(screen, pygame.Color(str(color)),
+                                (self.left + 110 + self.size_k1 * j, self.top + self.size_k1 * i,
+                                 self.size_k1, self.size_k1), 1)
 
     # функия получения координат клетки по типу [x, y] пример (0, 3)
     def get_coords(self, coord_x, coord_y):

@@ -18,7 +18,7 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:   
                 running = False
         a.draw_sprite()
-        a.draw("white")
+        a.drawForChoice("white")
         pygame.display.flip()
     pygame.quit()
 
