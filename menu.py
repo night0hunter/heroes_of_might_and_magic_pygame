@@ -30,7 +30,7 @@ class Menu:
 if __name__ == '__main__':
     pygame.init()
     size = width, height = 800, 600
-    screen = pygame.display.set_mode(size)
+    screen = pygame.display.set_mode(size)  
     running = True
     font = pygame.font.Font(None, 60)
     a = Menu(size[0], size[1])

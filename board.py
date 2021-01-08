@@ -2,7 +2,7 @@ import pygame
 import sqlite3
 import os
 import sys
-
+from choiceWindow import input_boxes
 
 con = sqlite3.connect("C:\Github\heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
@@ -31,7 +31,7 @@ class Board:
         # значения по умолчанию
         self.size_k = 50
         self.size_k1 = 65
-        self.top = 50
+        self.top = 60
         self.left = 50
         self.list_move = []
 
@@ -53,7 +53,7 @@ class Board:
         for i in range(self.num1):
             for j in range(self.num2):
                 pygame.draw.rect(screen, pygame.Color(str(color)),
-                                (self.left + 300 + self.size_k1 * j, self.top + self.size_k1 * i,
+                                (self.left + 350 + self.size_k1 * j, self.top + self.size_k1 * i,
                                  self.size_k1, self.size_k1), 1)
 
     # функия получения координат клетки по типу [x, y] пример (0, 3)
@@ -64,7 +64,7 @@ class Board:
         x = x // self.size_k
         y = y // self.size_k
         return [x, y]
-
+                                                    
     # функция прорисовки возможности хода
     def draw_move_option(self):
         color = pygame.Color(50, 150, 50)
@@ -81,8 +81,8 @@ class Board:
         x, y = coord_x, coord_y
         x -= self.left
         y -= self.top
-        x = x // self.size_k
-        y = y // self.size_k
+        x //= self.size_k
+        y //= self.size_k
         result = cur.execute(f"""SELECT speed FROM unit_stats WHERE name == '{self.list_per[y][x]}'""").fetchone()
         result = int(result[0]) + 1
         self.list_move = []
@@ -107,6 +107,13 @@ class Board:
                     elif y < i and result <= j - x + i - y:
                         self.list_move[i][j] = False
         return self.list_move
+
+    # def draw_placement(self, coord_x, coord_y):
+    #     x, y = coord_x, coord_y
+    #     x -= self.left
+    #     y -= self.top
+    #     x //= self.size_k
+    #     y //= self.size_k
 
     # функция проверки на место нажатия
     def in_board(self, coord_x, coord_y):
@@ -150,9 +157,6 @@ class Board:
         self.list_per[arr[1]][arr[0]] = 0
         self.list_per[y][x] = a
 
-    def write_name(self):
-        pass
-    
     def draw_person(self):
         all_sprites2 = pygame.sprite.Group()
         for y in range(self.num1):
@@ -184,12 +188,18 @@ class Board:
                 sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
 
             text = font.render(result[i][0], True, color)
-            place = text.get_rect(center=(self.left + 150, self.top * (i + 2)))
+            
+            if result[i][0] == "Крестьянин":
+                sprite.rect = sprite.image.get_rect()
+                sprite.rect.x = self.left + 50
+                sprite.rect.y = (self.top - 10) * (i + 1)
+                place = text.get_rect(center=(self.left + 200, (self.top - 10) * (i + 2)))
+            else:
+                sprite.rect = sprite.image.get_rect()
+                sprite.rect.x = self.left + 50
+                sprite.rect.y = self.top * (i + 1)
+                place = text.get_rect(center=(self.left + 200, (self.top - 2) * (i + 2)))
             screen.blit(text, place)
-
-            sprite.rect = sprite.image.get_rect()
-            sprite.rect.x = self.left + 1
-            sprite.rect.y = self.top * (i + 1)
         all_sprites3.draw(screen)
 
         for i in range(len(result2)):
@@ -199,8 +209,8 @@ class Board:
             else:
                 sprite1.image = load_image(f"{result2[i][0]}.png", colorkey=-1)
             sprite1.rect = sprite1.image.get_rect()
-            sprite1.rect.x = 1300 - self.left
-            sprite1.rect.y = self.top * (i + 1)
+            sprite1.rect.x = 1280 - self.left
+            sprite1.rect.y = (self.top + 2)* (i + 1)
 
             text = font.render(result2[i][0], True, color)
             place = text.get_rect(center=(1200 - self.left, self.top * (i + 2)))
