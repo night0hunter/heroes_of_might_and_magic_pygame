@@ -2,7 +2,7 @@ import pygame
 import sqlite3
 import os
 import sys
-from choiceWindow import input_boxes
+# from choiceWindow import input_boxes
 
 con = sqlite3.connect("C:\Github\heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
