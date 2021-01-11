@@ -192,6 +192,8 @@ class Board:
                     
                     sprite.rect.x = self.left + 350 + self.size_k1 * x + 1
                     sprite.rect.y = self.top - 10 + self.size_k1 * y + 1
+                    if self.list_per[y][x] == "Костяной дракон" or self.list_per[y][x] == "Паук":
+                        sprite.rect.y = self.top + self.size_k1 * y + 1
         all_sprites2.draw(screen)
 
     def draw_sprite(self):
@@ -267,8 +269,6 @@ class Board:
                             self.size_k1 - 2, self.size_k1 - 2), 0)
                         self.list_move[y][self.num2 - x - 1] = True
         
-        
-    
     def make_pers(self, x, y, target):
         x -= (self.left + 350)
         y -= self.top
