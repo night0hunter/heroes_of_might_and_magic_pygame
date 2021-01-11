@@ -260,12 +260,12 @@ class Board:
                             self.top + self.size_k1 * y + 1,
                             self.size_k1 - 2, self.size_k1 - 2), 0)
                         self.list_move[y][x] = True
-                    else:
+                if self.list_per[y][self.num2 - x - 1] == 0:
+                    if result != 1:
                         pygame.draw.rect(screen4, color, (self.left + 285 + self.size_k1 * (self.num2 - x) + 1,
                             self.top + self.size_k1 * (y) + 1,
                             self.size_k1 - 2, self.size_k1 - 2), 0)
                         self.list_move[y][self.num2 - x - 1] = True
-                        print(y, self.num2 - x)
         
         
     
