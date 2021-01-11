@@ -2,7 +2,7 @@ import pygame
 import sqlite3
 import os
 import sys
-# from choiceWindow import input_boxes
+
 
 con = sqlite3.connect("C:\Github\heroes_of_might_and_magic_pygame\\units.db")
 cur = con.cursor()
@@ -40,16 +40,19 @@ class Board:
         self.left = left
         self.top = top
         self.size_k = size
+    
+    def rtn_list_per(self):
+        return self.list_per
 
     # функция рисования поля
-    def draw(self, color):
+    def draw(self, color, screen):
         for i in range(self.num1):
             for j in range(self.num2):
                 pygame.draw.rect(screen, pygame.Color(str(color)),
                                 (self.left + self.size_k * j, self.top + self.size_k * i,
                                  self.size_k, self.size_k), 1)
 
-    def drawForChoice(self, color):
+    def drawForChoice(self, color, screen):
         for i in range(self.num1):
             for j in range(self.num2):
                 pygame.draw.rect(screen, pygame.Color(str(color)),
@@ -66,7 +69,7 @@ class Board:
         return [x, y]
                                                     
     # функция прорисовки возможности хода
-    def draw_move_option(self):
+    def draw_move_option(self, screen2):
         color = pygame.Color(50, 150, 50)
         if self.list_move != [] and self.list_per != []:
             for i in range(self.num1):
@@ -163,7 +166,7 @@ class Board:
         self.list_per[arr[1]][arr[0]] = 0
         self.list_per[y][x] = a
 
-    def draw_person(self):
+    def draw_person(self, screen2):
         all_sprites2 = pygame.sprite.Group()
         for y in range(self.num1):
             for x in range(self.num2):
@@ -196,7 +199,7 @@ class Board:
                         sprite.rect.y = self.top + self.size_k1 * y + 1
         all_sprites2.draw(screen)
 
-    def draw_sprite(self):
+    def draw_sprite(self, screen):
         self.coords_picture = []
         result = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 1""").fetchall()
         result2 = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 0""").fetchall()
@@ -278,16 +281,6 @@ class Board:
         self.list_per[y][x] = target
 
         
-abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
-       ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби", 0, 0],
-       ["Некромант", "Привидение", 0, 0, 0, 0, 0, 0, 0, 0],
-       ["Крестьянин", "Паладин", 0, 0, 0, 0, 0, 0, 0, 0],
-       ["Ангел", 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-
- 
 def load_image(name, colorkey=None):
     fullname = os.path.join('heroes_of_might_and_magic_pygame', 'data', name)
     if not os.path.isfile(fullname):
@@ -302,68 +295,3 @@ def load_image(name, colorkey=None):
     else:
         image = image.convert_alpha()
     return image
-
-
-size = 1000, 700
-screen = pygame.display.set_mode(size)    
-screen2 = pygame.Surface(screen.get_size())
-if __name__ == "__main__":
-    screen.fill((0, 0, 0))
-    a = Board(size[0], size[1], 8, 10)
-    a.setting(10, 10, 70)
-
-    all_sprites = pygame.sprite.Group()
-    sprite = pygame.sprite.Sprite(all_sprites)
-    sprite.image = load_image("arrow.png")
-    sprite.rect = sprite.image.get_rect()
-
-    clock = pygame.time.Clock()
-    FPS = 1440
-    running = True
-    Move = False
-    pygame.mouse.set_visible(False)
-    draw = False
-    a.input_list_per(abc)
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:   
-                running = False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                pass
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                screen2.fill((0, 0, 0))
-                if a.in_board(event.pos[0], event.pos[1]):
-                    if not Move and a.in_list_per(event.pos[0], event.pos[1]):
-                        a.move_option(event.pos[0], event.pos[1])
-                        a.draw_move_option()
-                        Move = True
-                        arr = a.get_coords(event.pos[0], event.pos[1])
-                    elif Move and a.in_list_move(event.pos[0], event.pos[1]):
-                        if arr != a.get_coords(event.pos[0], event.pos[1]):
-                            if not a.in_list_per(event.pos[0], event.pos[1]):
-                                a.make_move(arr, event.pos[0], event.pos[1])
-                        Move = False
-                    else:
-                        Move = False
-                else:
-                    Move = False
-            if event.type == pygame.MOUSEMOTION:
-                sprite.rect.x = event.pos[0]
-                sprite.rect.y = event.pos[1]
-                if pygame.mouse.get_focused():
-                    draw = True
-                else:
-                    draw = False
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
-                screen2.fill((0, 0, 0))
-                Move = False
-            clock.tick(FPS)
-            a.draw_person()
-            screen.blit(screen2, (0, 0))
-            a.draw("white")
-            if draw:
-                all_sprites.draw(screen)
-            pygame.display.flip()
-
-    pygame.quit()
-    con.close()

@@ -11,7 +11,7 @@ class Menu:
         self.flag = True
         self.color = 255
 
-    def draw(self, screen):
+    def draw(self, screen, font):
         screen.fill((0, 0, 0))
         text = font.render("Нажмите space, чтобы продолжить", True, (0, self.color, 0))
         screen.blit(text, (self.text_x, self.text_y))
@@ -26,25 +26,3 @@ class Menu:
             self.flag = True
         elif self.color == 50:
             self.flag = False
-
-if __name__ == '__main__':
-    pygame.init()
-    size = width, height = 800, 600
-    screen = pygame.display.set_mode(size)  
-    running = True
-    font = pygame.font.Font(None, 60)
-    a = Menu(size[0], size[1])
-    clock = pygame.time.Clock()
-    FPS = 300
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if pygame.key.key_code("space") == pygame.K_SPACE:
-                    running = False 
-        a.draw(screen)
-        clock.tick(FPS)
-        pygame.display.flip()
-    # завершение работы:
-    pygame.quit()
