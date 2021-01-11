@@ -218,6 +218,23 @@ class Board:
             if i[0] <= x <= i[0] + 70 and i[1] <= y <= i[1] + 70:
                 pygame.draw.rect(screen4, color, (i[0], i[1], 70, 70), 0)
                 return i[2]
+    
+    def draw_move_option2(self, screen4, target):
+        color = pygame.Color(50, 150, 50)
+        result = cur.execute(f"""SELECT fraction FROM unit_stats WHERE name == '{target}'""").fetchall()
+        result = int(result[0][0])
+        for y in range(self.num1):
+            for x in range(2):
+                if self.list_per[y][x] == 0:
+                    if result == 1:
+                        pygame.draw.rect(screen4, color, (self.left + 350 + self.size_k1 * x + 1,
+                            self.top + self.size_k1 * y + 1,
+                            self.size_k1 - 2, self.size_k1 - 2), 0)
+                    else:
+                        pygame.draw.rect(screen4, color, (-self.left + 970 + self.size_k1 * x + 1,
+                            self.top + self.size_k1 * y + 1,
+                            self.size_k1 - 2, self.size_k1 - 2), 0)
+
         
         
 

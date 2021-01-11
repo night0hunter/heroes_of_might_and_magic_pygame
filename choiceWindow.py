@@ -43,7 +43,7 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(size)
     screen2 = pygame.Surface(screen.get_size())
     screen.fill((0, 0, 0))
-    a = Board(size[0], size[1], 8, 10)
+    b = Board(size[0], size[1], 8, 10)
     running = True
     target = None
     while running:
@@ -52,7 +52,9 @@ if __name__ == "__main__":
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 screen2.fill((0, 0, 0))
-                print(a.draw_target_picture(screen2, event.pos[0], event.pos[1]))
+                target = b.draw_target_picture(screen2, event.pos[0], event.pos[1])
+                if target != None:
+                    b.draw_move_option2(screen2, target)
                 
                 
                 
@@ -63,8 +65,8 @@ if __name__ == "__main__":
         for box in input_boxes:
             box.draw(screen2)
         screen.blit(screen2, (0, 0))
-        a.draw_sprite()
-        a.drawForChoice("white")
+        b.draw_sprite()
+        b.drawForChoice("white")
         pygame.display.flip()
     j = 0
     for i in data.keys():
