@@ -177,10 +177,7 @@ class Board:
 
         for i in range(len(result)):
             sprite = pygame.sprite.Sprite(all_sprites3)
-            if result[i][0] == "Паладин":
-                sprite.image = load_image(f"{result[i][0]}.png")
-            else:
-                sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
+            sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
 
             text = font.render(result[i][0], True, color)
             
@@ -235,7 +232,7 @@ abc = [["Рыцарь", "Наемник с копьем", "Наемник с щ�
 
  
 def load_image(name, colorkey=None):
-    fullname = os.path.join('heroes_of_might_and_magic_pygame', 'data', name)
+    fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
