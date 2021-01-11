@@ -34,6 +34,7 @@ class Board:
         self.top = 60
         self.left = 50
         self.list_move = []
+        self.coords_picture = []
 
     # функция настройки
     def setting(self, left, top, size):
@@ -108,13 +109,6 @@ class Board:
                         self.list_move[i][j] = False
         return self.list_move
 
-    # def draw_placement(self, coord_x, coord_y):
-    #     x, y = coord_x, coord_y
-    #     x -= self.left
-    #     y -= self.top
-    #     x //= self.size_k
-    #     y //= self.size_k
-
     # функция проверки на место нажатия
     def in_board(self, coord_x, coord_y):
         if self.left <= coord_x <= self.left + self.size_k * self.num2:
@@ -173,6 +167,7 @@ class Board:
         all_sprites2.draw(screen2)
     
     def draw_sprite(self):
+        self.coords_picture = []
         result = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 1""").fetchall()
         result2 = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 0""").fetchall()
         all_sprites3 = pygame.sprite.Group()
@@ -193,29 +188,39 @@ class Board:
                 sprite.rect = sprite.image.get_rect()
                 sprite.rect.x = self.left + 50
                 sprite.rect.y = (self.top - 10) * (i + 1)
+                self.coords_picture.append([self.left + 50, (self.top - 10) * (i + 1)])
                 place = text.get_rect(center=(self.left + 200, (self.top - 10) * (i + 2)))
             else:
                 sprite.rect = sprite.image.get_rect()
                 sprite.rect.x = self.left + 50
                 sprite.rect.y = self.top * (i + 1)
+                self.coords_picture.append([self.left + 50, self.top * (i + 1)])
                 place = text.get_rect(center=(self.left + 200, (self.top - 2) * (i + 2)))
             screen.blit(text, place)
         all_sprites3.draw(screen)
 
         for i in range(len(result2)):
             sprite1 = pygame.sprite.Sprite(all_sprites4)
-            if result2[i][0] == "Костяной дракон" or result2[i][0] == "Паладин":
+            if result2[i][0] == "Костяной дракон":
                 sprite1.image = load_image(f"{result2[i][0]}.png")
             else:
                 sprite1.image = load_image(f"{result2[i][0]}.png", colorkey=-1)
             sprite1.rect = sprite1.image.get_rect()
             sprite1.rect.x = 1280 - self.left
             sprite1.rect.y = (self.top + 2)* (i + 1)
+            self.coords_picture.append([1280 - self.left, (self.top + 2)* (i + 1)])
 
             text = font.render(result2[i][0], True, color)
             place = text.get_rect(center=(1200 - self.left, self.top * (i + 2)))
             screen.blit(text, place)
         all_sprites4.draw(screen)
+    
+    def draw_target_picture(self, screen4, x, y):
+        color = pygame.Color(50, 150, 50)
+        for i in self.coords_picture:
+            if i[0] <= x <= i[0] + 70 and i[1] <= y <= i[1] + 70:
+                pygame.draw.rect(screen4, color, (i[0], i[1], 70, 70), 0)
+        return "крестьянин"
         
         
 
@@ -230,7 +235,7 @@ abc = [["Рыцарь", "Наемник с копьем", "Наемник с щ�
 
  
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join('heroes_of_might_and_magic_pygame', 'data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()

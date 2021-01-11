@@ -29,41 +29,46 @@ data = {
        "Лич": None
    }
 
+
 if __name__ == "__main__":
     font = pygame.font.Font(None, 24)
     size = 1500, 700
-   
+
     for i in range(9):
         input_boxes.append(InputBox(15, 65 * (i + 1), 50, 30))
     for i in range(10):
         input_boxes.append(InputBox(1350, 65 * (i + 1), 50, 30))
 
 
-    screen = pygame.display.set_mode(size)    
+    screen = pygame.display.set_mode(size)
     screen2 = pygame.Surface(screen.get_size())
     screen.fill((0, 0, 0))
     a = Board(size[0], size[1], 8, 10)
     running = True
-
+    target = None
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:   
+            if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                screen2.fill((0, 0, 0))
+                print(a.draw_target_picture(screen2, event.pos[0], event.pos[1]))
+                
+                
+                
             for box in input_boxes:
                 box.handle_event(event)
 
         screen.fill((0, 0, 0))
         for box in input_boxes:
-            box.draw(screen)
+            box.draw(screen2)
+        screen.blit(screen2, (0, 0))
         a.draw_sprite()
         a.drawForChoice("white")
-       
         pygame.display.flip()
-    j = 0   
+    j = 0
     for i in data.keys():
         data[i] = input_boxes[j].text
         j += 1
     print(data)
     pygame.quit()
-
-
