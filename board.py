@@ -177,7 +177,7 @@ class Board:
 
         for i in range(len(result)):
             sprite = pygame.sprite.Sprite(all_sprites3)
-            if result[i][0] == "Костяной дракон" or result[i][0] == "Паладин":
+            if result[i][0] == "Паладин":
                 sprite.image = load_image(f"{result[i][0]}.png")
             else:
                 sprite.image = load_image(f"{result[i][0]}.png", colorkey=-1)
@@ -188,13 +188,13 @@ class Board:
                 sprite.rect = sprite.image.get_rect()
                 sprite.rect.x = self.left + 50
                 sprite.rect.y = (self.top - 10) * (i + 1)
-                self.coords_picture.append([self.left + 50, (self.top - 10) * (i + 1)])
+                self.coords_picture.append([self.left + 50, (self.top - 10) * (i + 1), result[i][0]])
                 place = text.get_rect(center=(self.left + 200, (self.top - 10) * (i + 2)))
             else:
                 sprite.rect = sprite.image.get_rect()
                 sprite.rect.x = self.left + 50
                 sprite.rect.y = self.top * (i + 1)
-                self.coords_picture.append([self.left + 50, self.top * (i + 1)])
+                self.coords_picture.append([self.left + 50, self.top * (i + 1), result[i][0]])
                 place = text.get_rect(center=(self.left + 200, (self.top - 2) * (i + 2)))
             screen.blit(text, place)
         all_sprites3.draw(screen)
@@ -208,7 +208,7 @@ class Board:
             sprite1.rect = sprite1.image.get_rect()
             sprite1.rect.x = 1280 - self.left
             sprite1.rect.y = (self.top + 2)* (i + 1)
-            self.coords_picture.append([1280 - self.left, (self.top + 2)* (i + 1)])
+            self.coords_picture.append([1280 - self.left, (self.top + 2)* (i + 1), result2[i][0]])
 
             text = font.render(result2[i][0], True, color)
             place = text.get_rect(center=(1200 - self.left, self.top * (i + 2)))
@@ -220,7 +220,7 @@ class Board:
         for i in self.coords_picture:
             if i[0] <= x <= i[0] + 70 and i[1] <= y <= i[1] + 70:
                 pygame.draw.rect(screen4, color, (i[0], i[1], 70, 70), 0)
-        return "крестьянин"
+                return i[2]
         
         
 
