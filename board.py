@@ -33,7 +33,6 @@ class Board:
         self.size_k1 = 65
         self.top = 60
         self.left = 50
-        self.list_move = []
         self.coords_picture = []
 
     # функция настройки
@@ -115,6 +114,12 @@ class Board:
             if self.top <= coord_y <= self.top + self.size_k * self.num1:
                 return True
         return False
+    
+    def in_board2(self, x, y):
+        if self.left + 350 <= x <= self.left + 350 + self.size_k1 * self.num2:
+            if self.top <= y <= self.top + self.size_k1 * self.num1:
+                return True
+        return False
       
     #связующая функция изменения списка местоположения персонажей
     def input_list_per(self, list):
@@ -140,6 +145,13 @@ class Board:
         y = y // self.size_k
         return self.list_move[y][x]
     
+    def in_list_move2(self, x, y):
+        x -= (self.left + 350)
+        y -= self.top
+        x = x // self.size_k1
+        y = y // self.size_k1
+        return self.list_move[y][x]
+
     #функция хода  
     def make_move(self, arr, pos_x, pos_y):
         a = self.list_per[arr[1]][arr[0]]
@@ -166,6 +178,22 @@ class Board:
                     sprite.rect.y = self.top + self.size_k * y + 1
         all_sprites2.draw(screen2)
     
+    def draw_person2(self, screen):
+        all_sprites2 = pygame.sprite.Group()
+        for y in range(self.num1):
+            for x in range(self.num2):
+                if self.list_per[y][x] != 0:
+                    sprite = pygame.sprite.Sprite(all_sprites2)
+                    if self.list_per[y][x] == "Костяной дракон":
+                        sprite.image = load_image(f"{self.list_per[y][x]}.png")
+                    else:    
+                        sprite.image = load_image(f"{self.list_per[y][x]}.png", colorkey=-1)
+                    sprite.rect = sprite.image.get_rect()
+                    
+                    sprite.rect.x = self.left + 350 + self.size_k1 * x + 1
+                    sprite.rect.y = self.top - 10 + self.size_k1 * y + 1
+        all_sprites2.draw(screen)
+
     def draw_sprite(self):
         self.coords_picture = []
         result = cur.execute("""SELECT name FROM unit_stats WHERE fraction == 1""").fetchall()
@@ -211,13 +239,14 @@ class Board:
             place = text.get_rect(center=(1200 - self.left, self.top * (i + 2)))
             screen.blit(text, place)
         all_sprites4.draw(screen)
-    
+     
     def draw_target_picture(self, screen4, x, y):
         color = pygame.Color(50, 150, 50)
         for i in self.coords_picture:
             if i[0] <= x <= i[0] + 70 and i[1] <= y <= i[1] + 70:
                 pygame.draw.rect(screen4, color, (i[0], i[1], 70, 70), 0)
                 return i[2]
+        return None
     
     def draw_move_option2(self, screen4, target):
         color = pygame.Color(50, 150, 50)
@@ -230,14 +259,25 @@ class Board:
                         pygame.draw.rect(screen4, color, (self.left + 350 + self.size_k1 * x + 1,
                             self.top + self.size_k1 * y + 1,
                             self.size_k1 - 2, self.size_k1 - 2), 0)
+                        self.list_move[y][x] = True
                     else:
-                        pygame.draw.rect(screen4, color, (-self.left + 970 + self.size_k1 * x + 1,
-                            self.top + self.size_k1 * y + 1,
+                        pygame.draw.rect(screen4, color, (self.left + 285 + self.size_k1 * (self.num2 - x) + 1,
+                            self.top + self.size_k1 * (y) + 1,
                             self.size_k1 - 2, self.size_k1 - 2), 0)
-
+                        self.list_move[y][self.num2 - x - 1] = True
+                        print(y, self.num2 - x)
         
         
+    
+    def make_pers(self, x, y, target):
+        x -= (self.left + 350)
+        y -= self.top
+        x = x // self.size_k1
+        y = y // self.size_k1
+        self.list_move[y][x] = False
+        self.list_per[y][x] = target
 
+        
 abc = [["Рыцарь", "Наемник с копьем", "Наемник с щитом", 0, 0, 0, 0, "Костяной дракон", 0, 0],
        ["Ангел", "Адский пес", "Вампир", 0, 0, 0, 0, "Зомби", 0, 0],
        ["Некромант", "Привидение", 0, 0, 0, 0, 0, 0, 0, 0],

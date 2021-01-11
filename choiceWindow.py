@@ -32,7 +32,7 @@ data = {
 
 if __name__ == "__main__":
     font = pygame.font.Font(None, 24)
-    size = 1500, 700
+    size = 1400, 700
 
     for i in range(9):
         input_boxes.append(InputBox(15, 65 * (i + 1), 50, 30))
@@ -46,26 +46,36 @@ if __name__ == "__main__":
     b = Board(size[0], size[1], 8, 10)
     running = True
     target = None
+    noTarget = []
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 screen2.fill((0, 0, 0))
-                target = b.draw_target_picture(screen2, event.pos[0], event.pos[1])
-                if target != None:
-                    b.draw_move_option2(screen2, target)
-                
-                
-                
+                if not(b.in_board2(event.pos[0], event.pos[1])):
+                    target = b.draw_target_picture(screen2, event.pos[0], event.pos[1])
+                    if target != None and target not in noTarget:
+                        b.draw_move_option2(screen2, target)
+                print(1)
+                if b.in_board2(event.pos[0], event.pos[1]) and target != None and target not in noTarget:
+                    print(2)
+                    if b.in_list_move2(event.pos[0], event.pos[1]):
+                        print(3)
+                        b.make_pers(event.pos[0], event.pos[1], target)
+                        noTarget.append(target)
+                        target = None
+                    
             for box in input_boxes:
                 box.handle_event(event)
 
         screen.fill((0, 0, 0))
-        for box in input_boxes:
-            box.draw(screen2)
         screen.blit(screen2, (0, 0))
+        for box in input_boxes:
+            box.draw(screen)
+
         b.draw_sprite()
+        b.draw_person2(screen2)
         b.drawForChoice("white")
         pygame.display.flip()
     j = 0
