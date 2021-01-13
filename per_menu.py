@@ -28,17 +28,19 @@ class InputBox:
             # Change the current color of the input box.
             self.color = COLOR_ACTIVE if self.active else COLOR_INACTIVE
         if event.type == pg.KEYDOWN:
-            if self.active:
-                if event.key == pg.K_RETURN:
-                    print(self.text)
-                    self.text = ''
-                elif event.key == pg.K_BACKSPACE:
-                    self.text = self.text[:-1]
-                elif len(self.text) <= 2:
-                    self.text += event.unicode
-                # Re-render the text.
-                self.txt_surface = FONT.render(self.text, True, self.color)
-
+            if event.key == pg.K_1 or event.key == pg.K_2 or event.key == pg.K_3 or event.key == pg.K_4\
+                    or event.key == pg.K_5 or event.key == pg.K_6 or event.key == pg.K_7\
+                    or event.key == pg.K_8 or event.key == pg.K_9 or event.key == pg.K_0:
+                if self.active:
+                    if event.key == pg.K_RETURN:
+                        print(self.text)
+                        self.text = ''
+                    elif event.key == pg.K_BACKSPACE:
+                        self.text = self.text[:-1]
+                    elif len(self.text) <= 2:
+                        self.text += event.unicode
+                    # Re-render the text.
+                    self.txt_surface = FONT.render(self.text, True, self.color)
 
     def draw(self, screen):
         # Blit the text.
