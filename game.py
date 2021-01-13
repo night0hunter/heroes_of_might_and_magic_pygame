@@ -8,7 +8,8 @@ from menu import Menu
 
 
 
-
+con = sqlite3.connect("C:\Github\heroes_of_might_and_magic_pygame\\units.db")
+cur = con.cursor()
 pygame.init()
 size = width, height = 800, 600
 screen = pygame.display.set_mode(size)  
@@ -21,9 +22,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if pygame.key.key_code("space") == pygame.K_SPACE:
-                running = False 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            running = False 
     a.draw(screen, font)
     clock.tick(FPS)
     pygame.display.flip()
@@ -31,25 +31,25 @@ while running:
 
 input_boxes = []
 data = {
-       "Крестьянин": None,
-       "Ополченец с щитом": None,
-       "Ополченец с луком": None,
-       "Наемник с копьем": None,
-       "Наемник с щитом": None,
-       "Паладин": None,
-       "Рыцарь": None,
-       "Маг": None,
-       "Ангел": None,
-       "Скелет": None,
-       "Зомби": None,
-       "Адский пес": None,
-       "Привидение": None,
-       "Паук": None,
-       "Вампир": None,
-       "Некромант": None,
-       "Демон": None,
-       "Костяной дракон": None,
-       "Лич": None
+       "Крестьянин": 1,
+       "Ополченец с щитом": 1,
+       "Ополченец с луком": 1,
+       "Наемник с копьем": 1,
+       "Наемник с щитом": 1,
+       "Паладин": 1,
+       "Рыцарь": 1,
+       "Маг": 1,
+       "Ангел": 1,
+       "Скелет": 1,
+       "Зомби": 1,
+       "Адский пес": 1,
+       "Привидение": 1,
+       "Паук": 1,
+       "Вампир": 1,
+       "Некромант": 1,
+       "Демон": 1,
+       "Костяной дракон": 1,
+       "Лич": 1
    }
 
 
@@ -73,9 +73,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if pygame.key.key_code("space") == pygame.K_SPACE:
-                running = False 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            running = False 
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             screen2.fill((0, 0, 0))
             if not(b.in_board2(event.pos[0], event.pos[1])):
