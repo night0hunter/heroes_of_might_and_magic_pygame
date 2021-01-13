@@ -279,6 +279,24 @@ class Board:
         y = y // self.size_k1
         self.list_move[y][x] = False
         self.list_per[y][x] = target
+    
+    def make_hod(self, data):
+        hod = []
+        for i in self.list_per:
+            for j in i:
+                if j != 0:
+                    hod.append([j, int(data[j])])
+        hod.sort(key = lambda i: i[1])
+        for i in range(len(hod)):
+            hod[i] = hod[i][0]
+        return hod
+    
+    def pers(self, x, y):
+        x -= self.left
+        y -= self.top
+        x = x // self.size_k
+        y = y // self.size_k
+        return self.list_per[y][x]
 
         
 def load_image(name, colorkey=None):

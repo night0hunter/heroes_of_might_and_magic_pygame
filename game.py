@@ -103,6 +103,8 @@ j = 0
 for i in data.keys():
     data[i] = input_boxes[j].text
     j += 1
+    if data[i] == "":
+        data[i] = 1
 
 
 abc = b.rtn_list_per()
@@ -126,6 +128,8 @@ Move = False
 pygame.mouse.set_visible(False)
 draw = False
 a.input_list_per(abc)
+hod = a.make_hod(data)
+target = hod[0]
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   
@@ -136,14 +140,17 @@ while running:
             screen2.fill((0, 0, 0))
             if a.in_board(event.pos[0], event.pos[1]):
                 if not Move and a.in_list_per(event.pos[0], event.pos[1]):
+                    target = a.pers(event.pos[0], event.pos[1])
                     a.move_option(event.pos[0], event.pos[1])
-                    a.draw_move_option(screen2)
                     Move = True
                     arr = a.get_coords(event.pos[0], event.pos[1])
-                elif Move and a.in_list_move(event.pos[0], event.pos[1]):
+                    if target == hod[0]:
+                        a.draw_move_option(screen2)
+                elif Move and a.in_list_move(event.pos[0], event.pos[1]) and target == hod[0]:
                     if arr != a.get_coords(event.pos[0], event.pos[1]):
                         if not a.in_list_per(event.pos[0], event.pos[1]):
                             a.make_move(arr, event.pos[0], event.pos[1])
+                            del hod[0]
                     Move = False
                 else:
                     Move = False
@@ -159,13 +166,13 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             screen2.fill((0, 0, 0))
             Move = False
-        clock.tick(FPS)
         a.draw_person(screen2)
         screen.blit(screen2, (0, 0))
         a.draw("white", screen)
         if draw:
             all_sprites.draw(screen)
         pygame.display.flip()
+        clock.tick(FPS)
 
 pygame.quit()
 con.close()
