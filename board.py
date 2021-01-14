@@ -285,7 +285,7 @@ class Board:
         for i in self.list_per:
             for j in i:
                 if j != 0:
-                    hod.append([j, int(data[j])])
+                    hod.append([j, int(data[j][0])])
         hod.sort(key = lambda i: i[1])
         for i in range(len(hod)):
             hod[i] = hod[i][0]
@@ -297,10 +297,25 @@ class Board:
         x = x // self.size_k
         y = y // self.size_k
         return self.list_per[y][x]
+    
+    def text_info(self, target, data):
+        font = pygame.font.Font(None, 20)
+        result = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{target}'""").fetchall()
+        result = result[0]
+        #if result[5][0] == 0:
+            #result[5][0] = "Нежить"
+        #else:
+            #result[5][0] = "Живые"
+        return [f"Имя: {target}", f"Здоровье: {result[1]}", f"Атака: {result[2]}", f"Дальность атаки: {result[3]}",
+                f"Количество: {data[target][0]}", f"Защита: {result[4]}", f"Скорость: {result[6]}", f"Фракция: {result[5]}"]
+        
+
+        
+
 
         
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join('heroes_of_might_and_magic_pygame','data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()

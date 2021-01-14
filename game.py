@@ -55,6 +55,7 @@ data = {
 
 font = pygame.font.Font(None, 24)
 size = 1400, 700
+size1 = 300, 50
 
 for i in range(9):
     input_boxes.append(InputBox(15, 65 * (i + 1), 50, 30))
@@ -101,18 +102,24 @@ while running:
     pygame.display.flip()
 j = 0
 for i in data.keys():
-    data[i] = input_boxes[j].text
+    hp = cur.execute(f"""SELECT health FROM unit_stats WHERE name = '{i}'""").fetchone()
+    hp = hp[0]
+    a = input_boxes[j].text
+    if a == "":
+        a = 1
+    data[i] = [a, int(a) * int(hp)]
     j += 1
-    if data[i] == "":
-        data[i] = 1
 
 
 abc = b.rtn_list_per()
 
-size = 1000, 700
+size = 1100, 700
+size1 = 300, 50
 screen = pygame.display.set_mode(size)    
 screen2 = pygame.Surface(screen.get_size())
+screen3 = pygame.Surface(size1)
 screen.fill((0, 0, 0))
+screen3.fill((255, 0, 0))
 a = Board(size[0], size[1], 8, 10)
 a.setting(10, 10, 70)
 
@@ -125,11 +132,13 @@ clock = pygame.time.Clock()
 FPS = 1440
 running = True
 Move = False
+Info = False
 pygame.mouse.set_visible(False)
 draw = False
 a.input_list_per(abc)
 hod = a.make_hod(data)
 target = hod[0]
+font = pygame.font.Font(None, 50)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   
@@ -143,19 +152,24 @@ while running:
                     target = a.pers(event.pos[0], event.pos[1])
                     a.move_option(event.pos[0], event.pos[1])
                     Move = True
+                    Info = True
                     arr = a.get_coords(event.pos[0], event.pos[1])
-                    if target == hod[0]:
-                        a.draw_move_option(screen2)
+                    a.draw_move_option(screen2)
                 elif Move and a.in_list_move(event.pos[0], event.pos[1]) and target == hod[0]:
                     if arr != a.get_coords(event.pos[0], event.pos[1]):
                         if not a.in_list_per(event.pos[0], event.pos[1]):
                             a.make_move(arr, event.pos[0], event.pos[1])
                             del hod[0]
+                            if len(hod) == 0:
+                                hod = a.make_hod(data)
                     Move = False
+                    Info = False
                 else:
                     Move = False
+                    Info = False
             else:
                 Move = False
+                Info = False
         if event.type == pygame.MOUSEMOTION:
             sprite.rect.x = event.pos[0]
             sprite.rect.y = event.pos[1]
@@ -166,13 +180,22 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
             screen2.fill((0, 0, 0))
             Move = False
+            Info = False
         a.draw_person(screen2)
         screen.blit(screen2, (0, 0))
         a.draw("white", screen)
         if draw:
             all_sprites.draw(screen)
+        text = font.render(f"{hod[0]}", True, (100, 255, 100))
+        screen.blit(text, (350, 600))
+        if Info:
+            font1 = pygame.font.Font(None, 30)
+            y1 = 50
+            for i in a.text_info(target, data):
+                text = font1.render(i, True, (100, 255, 100))
+                screen.blit(text, (800, y1))
+                y1 += 30
         pygame.display.flip()
         clock.tick(FPS)
 
 pygame.quit()
-con.close()
