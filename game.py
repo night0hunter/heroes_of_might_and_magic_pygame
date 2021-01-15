@@ -234,7 +234,7 @@ elif c == 1:
     c = "Победила Нежить"
 font = pygame.font.Font(None, 50)
 text = font.render(c, True, (100, 255, 100))
-screen.blit(text, (20, 135))
+screen.blit(text, (145, 135))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   
