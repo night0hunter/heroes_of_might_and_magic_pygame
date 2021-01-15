@@ -141,7 +141,7 @@ a.input_list_per(abc)
 hod = a.make_hod(data)
 target = hod[0]
 font = pygame.font.Font(None, 50)
-
+c = "Ничья"
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   
@@ -162,12 +162,16 @@ while running:
                     a.draw_attack(screen2, event.pos[0], event.pos[1], target)
                 elif target == hod[0] and a.in_list_per(event.pos[0], event.pos[1]) != 0 and a.in_list_attack(event.pos[0], event.pos[1]):
                     [data, hod] = a.make_attack(target, data, event.pos[0], event.pos[1], hod)
+
                     Attack = True
                     del hod[0]
                     if len(hod) == 0:
                         hod = a.make_hod(data)
                     Move = False
                     Info = False
+                    c = a.win()
+                    if c != None:
+                        running = False
                 elif Move and a.in_list_move(event.pos[0], event.pos[1]) and target == hod[0]:
                     if arr != a.get_coords(event.pos[0], event.pos[1]):
                         if a.in_list_per(event.pos[0], event.pos[1]) == 0:
@@ -219,4 +223,22 @@ while running:
         pygame.display.flip()
         clock.tick(FPS)
 
+
+size = 600, 300
+screen = pygame.display.set_mode(size) 
+screen.fill((0, 0, 0))
+running = True
+if c == 0:
+    c = "Победили Живые"
+elif c == 1:
+    c = "Победила Нежить"
+font = pygame.font.Font(None, 50)
+text = font.render(c, True, (100, 255, 100))
+screen.blit(text, (20, 135))
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:   
+            running = False
+
+    pygame.display.flip()
 pygame.quit()

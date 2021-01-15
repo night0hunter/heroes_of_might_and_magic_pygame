@@ -359,9 +359,9 @@ class Board:
         res0 = res0[0]
         res1 = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{per}'""").fetchall()
         res1 = res1[0]
-        data[per][1] = int(data[per][1]) - (int(data[target][0]) * int(res0[2])) * (1 - int(res1[4]) // 100)
-        data[per][0] = int(data[per][1]) // int((res1[1]))
-        if data[per][1] % int((res1[1])) != 0:
+        data[per][1] = float(data[per][1]) - ((float(data[target][0]) * float(res0[2])) * (1 - float(res1[4]) / 100))
+        data[per][0] = float(data[per][1]) // float((res1[1]))
+        if data[per][1] % float((res1[1])) != 0:
             data[per][0] += 1
         if data[per][0] <= 0:
             self.list_per[y][x] = 0
@@ -386,8 +386,8 @@ class Board:
             a = "Нежить"
         else:
             a = "Живые"
-        return [f"Имя: {target}", f"Здоровье: {data[target][1]}",
-                f"Атака: {int(result[2]) * int(data[target][0])}",
+        return [f"Имя: {target}", f"Здоровье: {float(data[target][1])}",
+                f"Атака: {float(result[2]) * float(data[target][0])}",
                 f"Дальность атаки: {result[3]}", f"Количество: {data[target][0]}",
                 f"Защита: {result[4]}", f"Скорость: {result[6]}", f"Фракция: {result[5]}"]
     
@@ -396,10 +396,27 @@ class Board:
         text = font.render("Завершить ход", True, (100, 255, 100))
         pygame.draw.rect(screen, (50, 150, 50), (left, top - 10, 280, 50), 1)
         screen.blit(text, (left + 8, top))
+    
+    def win(self):
+        res = [0, 0]
+        for i in self.list_per:
+            for j in i:
+                if j != 0:
+                    res1 = cur.execute(f"""SELECT fraction FROM unit_stats WHERE name == '{j}'""").fetchone()
+                    res1 = res1[0]
+                    if int(res1) == 1:
+                        res[0] += 1
+                    elif int(res1) == 0:
+                        res[1] += 1
+        if res[0] == 0:
+            return 1
+        elif res[1] == 0:
+            return 0
+        return None
         
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('data', name)
+    fullname = os.path.join('heroes_of_might_and_magic_pygame', 'data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
