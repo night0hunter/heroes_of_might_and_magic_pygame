@@ -359,7 +359,7 @@ class Board:
         res0 = res0[0]
         res1 = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{per}'""").fetchall()
         res1 = res1[0]
-        data[per][1] = int(data[per][1]) - (data[target][0] * int(res0[2]))
+        data[per][1] = int(data[per][1]) - (int(data[target][0]) * int(res0[2])) * (1 - int(res1[4]) // 100)
         data[per][0] = int(data[per][1]) // int((res1[1]))
         if data[per][1] % int((res1[1])) != 0:
             data[per][0] += 1
@@ -399,7 +399,7 @@ class Board:
         
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join('heroes_of_might_and_magic_pygame','data', name)
+    fullname = os.path.join('data', name)
     if not os.path.isfile(fullname):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
