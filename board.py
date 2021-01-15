@@ -20,6 +20,7 @@ class Board:
         #список клеток с персонажами
         self.list_per = []
         self.list_move = []
+        self.list_attack = []
         for i in range(self.num1):
             b = []
             c = []
@@ -28,6 +29,7 @@ class Board:
                 c.append(False)
             self.list_per.append(b)
             self.list_move.append(c)
+            self.list_attack.append(c)
         # значения по умолчанию
         self.size_k = 50
         self.size_k1 = 65
@@ -135,9 +137,7 @@ class Board:
         y -= self.top
         x = x // self.size_k
         y = y // self.size_k
-        if self.list_per[y][x] != 0:
-            return True
-        return False
+        return self.list_per[y][x]
     
     #функция проверки если на клетке никого нет вернет False если кто-то есть вернет True 
     def in_list_move(self, pos_x, pos_y):
@@ -298,22 +298,106 @@ class Board:
         y = y // self.size_k
         return self.list_per[y][x]
     
+    def attack_option(self, x, y):
+        x -= self.left
+        y -= self.top
+        x //= self.size_k
+        y //= self.size_k
+        result = cur.execute(f"""SELECT range FROM unit_stats WHERE name == '{self.list_per[y][x]}'""").fetchone()
+        result = int(result[0]) + 1
+        self.list_attack = []
+        for i in range(self.num1):
+            b = []
+            for j in range(self.num2):
+                b.append([i, j])
+            self.list_attack.append(b)
+        for i in range(self.num1):
+            for j in range(self.num2):
+                self.list_attack[i][j] = True
+                if x >= j:
+                    if y >= i and result <= x - j + y - i:
+                        self.list_attack[i][j] = False
+                    elif y < i and result <= x - j + i - y:
+                        self.list_attack[i][j] = False
+                else:
+                    if y >= i and result <= j - x + y - i:
+                        self.list_attack[i][j] = False
+                    elif y < i and result <= j - x + i - y:
+                        self.list_attack[i][j] = False
+        for i in self.list_attack:
+            for j in i:
+                if j:
+                    return j
+        return False
+    
+    def draw_attack(self, screen2, x, y, target):
+        x -= self.left
+        y -= self.top
+        x //= self.size_k
+        y //= self.size_k
+        color = pygame.Color(150, 50, 50)
+        res0 = cur.execute(f"""SELECT fraction FROM unit_stats WHERE name == '{target}'""").fetchone()
+        res0 = int(res0[0])
+        if self.list_attack != [] and self.list_per != []:
+            for i in range(self.num1):
+                for j in range(self.num2):
+                    if self.list_attack[i][j] is True and self.list_per[i][j] != 0 and target != self.list_per[i][j]:
+                        res1 = cur.execute(f"""SELECT fraction FROM unit_stats WHERE name == '{self.list_per[i][j]}'""").fetchone()
+                        res1 = int(res1[0])
+                        if res0 != res1:
+                            pygame.draw.rect(screen2, color, (self.left + self.size_k * j + 1,
+                            self.top + self.size_k * i + 1,
+                            self.size_k - 2, self.size_k - 2))
+    
+    def make_attack(self, target, data, x, y, hod):
+        x -= self.left
+        y -= self.top
+        x //= self.size_k
+        y //= self.size_k
+        per = self.list_per[y][x]
+        res0 = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{target}'""").fetchall()
+        res0 = res0[0]
+        res1 = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{per}'""").fetchall()
+        res1 = res1[0]
+        data[per][1] = int(data[per][1]) - (data[target][0] * int(res0[2]))
+        data[per][0] = int(data[per][1]) // int((res1[1]))
+        if data[per][1] % int((res1[1])) != 0:
+            data[per][0] += 1
+        if data[per][0] <= 0:
+            self.list_per[y][x] = 0
+            if per in hod:
+                del hod[hod.index(per)]
+        return [data, hod]
+    
+    def in_list_attack(self, x, y):
+        x -= self.left
+        y -= self.top
+        x = x // self.size_k
+        y = y // self.size_k
+        return self.list_attack[y][x]
+
+    
     def text_info(self, target, data):
         font = pygame.font.Font(None, 20)
         result = cur.execute(f"""SELECT * FROM unit_stats WHERE name == '{target}'""").fetchall()
         result = result[0]
-        #if result[5][0] == 0:
-            #result[5][0] = "Нежить"
-        #else:
-            #result[5][0] = "Живые"
-        return [f"Имя: {target}", f"Здоровье: {result[1]}", f"Атака: {result[2]}", f"Дальность атаки: {result[3]}",
-                f"Количество: {data[target][0]}", f"Защита: {result[4]}", f"Скорость: {result[6]}", f"Фракция: {result[5]}"]
+        a = result[5][0]
+        if a == 0:
+            a = "Нежить"
+        else:
+            a = "Живые"
+        return [f"Имя: {target}", f"Здоровье: {data[target][1]}",
+                f"Атака: {int(result[2]) * int(data[target][0])}",
+                f"Дальность атаки: {result[3]}", f"Количество: {data[target][0]}",
+                f"Защита: {result[4]}", f"Скорость: {result[6]}", f"Фракция: {result[5]}"]
+    
+    def draw_button(self, screen, left, top):
+        font = pygame.font.Font(None, 50)
+        text = font.render("Завершить ход", True, (100, 255, 100))
+        pygame.draw.rect(screen, (50, 150, 50), (left, top - 10, 280, 50), 1)
+        screen.blit(text, (left + 8, top))
         
 
-        
-
-
-        
 def load_image(name, colorkey=None):
     fullname = os.path.join('heroes_of_might_and_magic_pygame','data', name)
     if not os.path.isfile(fullname):

@@ -133,12 +133,15 @@ FPS = 1440
 running = True
 Move = False
 Info = False
+Attack = False
+Only_attack = False
 pygame.mouse.set_visible(False)
 draw = False
 a.input_list_per(abc)
 hod = a.make_hod(data)
 target = hod[0]
 font = pygame.font.Font(None, 50)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:   
@@ -148,16 +151,26 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             screen2.fill((0, 0, 0))
             if a.in_board(event.pos[0], event.pos[1]):
-                if not Move and a.in_list_per(event.pos[0], event.pos[1]):
+                if not Move and a.in_list_per(event.pos[0], event.pos[1]) != 0:
                     target = a.pers(event.pos[0], event.pos[1])
                     a.move_option(event.pos[0], event.pos[1])
+                    a.attack_option(event.pos[0], event.pos[1])
                     Move = True
                     Info = True
                     arr = a.get_coords(event.pos[0], event.pos[1])
                     a.draw_move_option(screen2)
+                    a.draw_attack(screen2, event.pos[0], event.pos[1], target)
+                elif target == hod[0] and a.in_list_per(event.pos[0], event.pos[1]) != 0 and a.in_list_attack(event.pos[0], event.pos[1]):
+                    [data, hod] = a.make_attack(target, data, event.pos[0], event.pos[1], hod)
+                    Attack = True
+                    del hod[0]
+                    if len(hod) == 0:
+                        hod = a.make_hod(data)
+                    Move = False
+                    Info = False
                 elif Move and a.in_list_move(event.pos[0], event.pos[1]) and target == hod[0]:
                     if arr != a.get_coords(event.pos[0], event.pos[1]):
-                        if not a.in_list_per(event.pos[0], event.pos[1]):
+                        if a.in_list_per(event.pos[0], event.pos[1]) == 0:
                             a.make_move(arr, event.pos[0], event.pos[1])
                             del hod[0]
                             if len(hod) == 0:
@@ -170,6 +183,10 @@ while running:
             else:
                 Move = False
                 Info = False
+                if 50 <= event.pos[0] <= 330 and 590 <= event.pos[1] <= 640:
+                    del hod[0]
+                    if len(hod) == 0:
+                        hod = a.make_hod(data)
         if event.type == pygame.MOUSEMOTION:
             sprite.rect.x = event.pos[0]
             sprite.rect.y = event.pos[1]
@@ -184,8 +201,6 @@ while running:
         a.draw_person(screen2)
         screen.blit(screen2, (0, 0))
         a.draw("white", screen)
-        if draw:
-            all_sprites.draw(screen)
         text = font.render(f"{hod[0]}", True, (100, 255, 100))
         screen.blit(text, (350, 600))
         if Info:
@@ -195,6 +210,12 @@ while running:
                 text = font1.render(i, True, (100, 255, 100))
                 screen.blit(text, (800, y1))
                 y1 += 30
+        #if Attack is True:
+        #    Attack = a.animation_attack()
+        if True:
+            a.draw_button(screen, 50, 600)
+        if draw:
+            all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
